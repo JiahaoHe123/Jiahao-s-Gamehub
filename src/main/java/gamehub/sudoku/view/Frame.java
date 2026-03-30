@@ -42,7 +42,7 @@ public class Frame extends JFrame {
     private final SudokuHomePanel homePanel;
 
     /** Game page (board + controls) */
-    private final GamePage gamePanel;
+    private final SudokuGamePanel gamePanel;
 
     /**
      * Constructs the main application frame.
@@ -54,14 +54,14 @@ public class Frame extends JFrame {
     public Frame() {
         super("Sudoku");
 
-        homePanel = new SudokuHomePanel(
-                record,
-                () -> startNewGame(EASY),
-                () -> startNewGame(MEDIUM),
-                () -> startNewGame(HARD),
-                () -> System.exit(0));
+        homePanel = new SudokuHomePanel(record);
 
-        gamePanel = new GamePage(() -> showHome(), record);
+        homePanel.setOnEasy(() -> startNewGame(EASY));
+        homePanel.setOnMedium(() -> startNewGame(MEDIUM));
+        homePanel.setOnHard(() -> startNewGame(HARD));
+        homePanel.setOnQuit(() -> System.exit(0));
+
+        gamePanel = new SudokuGamePanel(() -> showHome(), record);
 
         // Register pages with CardLayout
         rootPanel.add(homePanel, "HOME");

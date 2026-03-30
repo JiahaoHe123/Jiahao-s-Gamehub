@@ -1,0 +1,30 @@
+# ==== OS junk ====
+.DS_Store
+
+# ==== IDE ====
+.vscode/
+.idea/
+*.iml
+
+# ==== Java / JVM ====
+*.class
+*.jar
+*.war
+*.ear
+hs_err_pid*
+replay_pid*
+
+# ==== Build tools ====
+target/
+out/
+build/
+.gradle/
+.mvn/wrapper/maven-wrapper.jar
+
+# ==== Logs / runtime temp ====
+*.log
+*.tmp
+
+# ==== Helper Classes ====
+src/main/java/gamehub/sudoku/Main.java
+src/main/java/gamehub/sudoku/view/Frame.java

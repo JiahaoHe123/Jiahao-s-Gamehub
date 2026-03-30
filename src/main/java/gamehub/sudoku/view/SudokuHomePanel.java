@@ -6,8 +6,6 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 
-import gamehub.sudoku.model.GameRecord;
-
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -16,22 +14,24 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
+import gamehub.sudoku.model.GameRecord;
+
 /**
  * Home page panel of the Sudoku application.
  *
  * <p>
- * This panel serves as the main entry screen where the user can:
+ * This panel is a view-only component responsible for:
+ * </p>
  * <ul>
- * <li>Select a difficulty level (Easy / Medium / Hard)</li>
- * <li>View their historical game statistics (wins, losses, win rate)</li>
- * <li>Quit the application</li>
+ *   <li>Displaying the title and difficulty choices</li>
+ *   <li>Displaying historical statistics from GameRecord</li>
+ *   <li>Exposing button callbacks for external wiring</li>
  * </ul>
- *
- * <p>
- * The page uses a centered "card" layout to remain visually balanced
- * across different window sizes and fullscreen mode.
  */
 public class SudokuHomePanel extends JPanel {
+
+    private static final Color PAGE_BG = new Color(245, 245, 245);
+    private static final Color CARD_BORDER = new Color(220, 220, 220);
 
     /** Persistent game record used to display statistics. */
     private final GameRecord record;
@@ -39,87 +39,53 @@ public class SudokuHomePanel extends JPanel {
     /** Label that displays win/loss statistics for all difficulty levels. */
     private final JLabel statsLabel;
 
-    /**
-     * Creates the Home page UI.
-     *
-     * @param record   persistent game record for displaying statistics
-     * @param onEasy   callback for starting an Easy game
-     * @param onMedium callback for starting a Medium game
-     * @param onHard   callback for starting a Hard game
-     * @param onQuit   callback for quitting the application
-     */
-    public SudokuHomePanel(
-            GameRecord record,
-            Runnable onEasy,
-            Runnable onMedium,
-            Runnable onHard,
-            Runnable onQuit) {
+    /** Difficulty buttons. */
+    private final JButton easyBtn;
+    private final JButton mediumBtn;
+    private final JButton hardBtn;
+    private final JButton quitBtn;
+
+    /** External callbacks. */
+    private Runnable onEasy = () -> {};
+    private Runnable onMedium = () -> {};
+    private Runnable onHard = () -> {};
+    private Runnable onQuit = () -> {};
+
+    public SudokuHomePanel(GameRecord record) {
         super(new GridBagLayout());
         this.record = record;
 
-        // Root background
-        setBackground(new Color(245, 245, 245));
-        setBorder(
-                BorderFactory.createEmptyBorder(
-                        30, 30, 30, 30));
+        setBackground(PAGE_BG);
+        setBorder(BorderFactory.createEmptyBorder(30, 30, 30, 30));
 
-        // Center card container
-        JPanel card = new JPanel();
-        card.setLayout(new BoxLayout(card, BoxLayout.Y_AXIS));
-        card.setBackground(Color.WHITE);
-        card.setBorder(
-                BorderFactory.createCompoundBorder(
-                        BorderFactory.createLineBorder(
-                                new Color(220, 220, 220), 1, true),
-                        BorderFactory.createEmptyBorder(
-                                25, 30, 25, 30)));
+        JPanel card = buildCard();
 
-        card.setAlignmentX(Component.CENTER_ALIGNMENT);
+        JLabel title = createTitleLabel();
+        JLabel subtitle = createSubtitleLabel();
 
-        // Title label
-        JLabel title = new JLabel("Sudoku");
-        title.setAlignmentX(Component.CENTER_ALIGNMENT);
-        title.setFont(new Font("SansSerif", Font.BOLD, 36));
-
-        // Subtitle label
-        JLabel subtitle = new JLabel("Please choose difficulty level");
-        subtitle.setAlignmentX(Component.CENTER_ALIGNMENT);
-        subtitle.setFont(new Font("SansSerif", Font.PLAIN, 14));
-
-        // Statistics label (HTML used for formatting)
         statsLabel = new JLabel("", SwingConstants.CENTER);
         statsLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         statsLabel.setFont(new Font("SansSerif", Font.PLAIN, 14));
-        statsLabel.setBorder(
-                BorderFactory.createEmptyBorder(
-                        8, 0, 8, 0));
-        refreshStats(); // initial load
+        statsLabel.setBorder(BorderFactory.createEmptyBorder(8, 0, 8, 0));
 
-        // Difficulty & quit buttons
-        JButton easyBtn = new JButton("Easy");
-        JButton mediumBtn = new JButton("Medium");
-        JButton hardBtn = new JButton("Hard");
-        JButton quitBtn = new JButton("Quit");
+        easyBtn = new JButton("Easy");
+        mediumBtn = new JButton("Medium");
+        hardBtn = new JButton("Hard");
+        quitBtn = new JButton("Quit");
 
-        // Apply consistent styling
         styleButton(easyBtn);
         styleButton(mediumBtn);
         styleButton(hardBtn);
         styleButton(quitBtn);
 
-        // Bind button actions
-        easyBtn.addActionListener(e -> onEasy.run());
-        mediumBtn.addActionListener(e -> onMedium.run());
-        hardBtn.addActionListener(e -> onHard.run());
-        quitBtn.addActionListener(e -> onQuit.run());
-
-        // Build card layout
-        card.add(Box.createVerticalStrut(12));
-        card.add(statsLabel);
+        bindActions();
+        refreshStats();
 
         card.add(title);
         card.add(Box.createVerticalStrut(10));
         card.add(subtitle);
+        card.add(Box.createVerticalStrut(12));
+        card.add(statsLabel);
         card.add(Box.createVerticalStrut(25));
 
         card.add(easyBtn);
@@ -130,7 +96,6 @@ public class SudokuHomePanel extends JPanel {
         card.add(Box.createVerticalStrut(25));
         card.add(quitBtn);
 
-        // Center card in root panel
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 0;
@@ -139,12 +104,24 @@ public class SudokuHomePanel extends JPanel {
         add(card, gbc);
     }
 
+    public void setOnEasy(Runnable onEasy) {
+        this.onEasy = onEasy == null ? () -> {} : onEasy;
+    }
+
+    public void setOnMedium(Runnable onMedium) {
+        this.onMedium = onMedium == null ? () -> {} : onMedium;
+    }
+
+    public void setOnHard(Runnable onHard) {
+        this.onHard = onHard == null ? () -> {} : onHard;
+    }
+
+    public void setOnQuit(Runnable onQuit) {
+        this.onQuit = onQuit == null ? () -> {} : onQuit;
+    }
+
     /**
-     * Refreshes the statistics displayed on the Home page.
-     *
-     * <p>
-     * This method queries {@link GameRecord} for wins, losses,
-     * and win rates, then updates the stats label using HTML formatting.
+     * Refreshes the statistics displayed on the home page.
      */
     public void refreshStats() {
         int easyWin = record.getWins(GameRecord.Difficulty.EASY);
@@ -158,28 +135,60 @@ public class SudokuHomePanel extends JPanel {
         double easyRate = record.getWinRate(GameRecord.Difficulty.EASY);
         double mediumRate = record.getWinRate(GameRecord.Difficulty.MEDIUM);
         double hardRate = record.getWinRate(GameRecord.Difficulty.HARD);
+
         statsLabel.setText(
-                "<html><div style='text-align:center;'>"
-                        + "<b>Record</b><br>"
-                        + "Easy: " + easyWin + " Wins / " + easyLose + " losses ("
-                        + String.format("%.1f", easyRate) + "%)<br>"
-                        + "Medium: " + mediumWin + " Wins / " + mediumLose + " losses ("
-                        + String.format("%.1f", mediumRate) + "%)<br>"
-                        + "Hard: " + hardWin + " Wins / " + hardLose + " losses ("
-                        + String.format("%.1f", hardRate) + "%)"
-                        + "</div></html>");
+            "<html><div style='text-align:center;'>"
+                + "<b>Record</b><br>"
+                + "Easy: " + easyWin + " Wins / " + easyLose + " losses ("
+                + String.format("%.1f", easyRate) + "%)<br>"
+                + "Medium: " + mediumWin + " Wins / " + mediumLose + " losses ("
+                + String.format("%.1f", mediumRate) + "%)<br>"
+                + "Hard: " + hardWin + " Wins / " + hardLose + " losses ("
+                + String.format("%.1f", hardRate) + "%)"
+                + "</div></html>"
+        );
     }
 
-    /**
-     * Applies consistent styling to buttons on the Home page.
-     *
-     * @param b the button to style
-     */
-    private void styleButton(JButton b) {
-        b.setAlignmentX(Component.CENTER_ALIGNMENT);
-        b.setFont(new Font("SansSerif", Font.PLAIN, 16));
-        b.setFocusPainted(false);
-        b.setMaximumSize(new java.awt.Dimension(260, 40));
-        b.setPreferredSize(new java.awt.Dimension(260, 40));
+    private JPanel buildCard() {
+        JPanel card = new JPanel();
+        card.setLayout(new BoxLayout(card, BoxLayout.Y_AXIS));
+        card.setBackground(Color.WHITE);
+        card.setBorder(
+            BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(CARD_BORDER, 1, true),
+                BorderFactory.createEmptyBorder(25, 30, 25, 30)
+            )
+        );
+        card.setAlignmentX(Component.CENTER_ALIGNMENT);
+        return card;
+    }
+
+    private JLabel createTitleLabel() {
+        JLabel title = new JLabel("Sudoku");
+        title.setAlignmentX(Component.CENTER_ALIGNMENT);
+        title.setFont(new Font("SansSerif", Font.BOLD, 36));
+        return title;
+    }
+
+    private JLabel createSubtitleLabel() {
+        JLabel subtitle = new JLabel("Please choose difficulty level");
+        subtitle.setAlignmentX(Component.CENTER_ALIGNMENT);
+        subtitle.setFont(new Font("SansSerif", Font.PLAIN, 14));
+        return subtitle;
+    }
+
+    private void bindActions() {
+        easyBtn.addActionListener(e -> onEasy.run());
+        mediumBtn.addActionListener(e -> onMedium.run());
+        hardBtn.addActionListener(e -> onHard.run());
+        quitBtn.addActionListener(e -> onQuit.run());
+    }
+
+    private void styleButton(JButton button) {
+        button.setAlignmentX(Component.CENTER_ALIGNMENT);
+        button.setFont(new Font("SansSerif", Font.PLAIN, 16));
+        button.setFocusPainted(false);
+        button.setMaximumSize(new java.awt.Dimension(260, 40));
+        button.setPreferredSize(new java.awt.Dimension(260, 40));
     }
 }

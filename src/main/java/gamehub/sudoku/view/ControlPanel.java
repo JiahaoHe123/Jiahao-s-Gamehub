@@ -5,108 +5,62 @@ import javax.swing.JPanel;
 import javax.swing.JToggleButton;
 
 /**
- * Control panel displayed at the bottom of the game page.
+ * Bottom action bar for the Sudoku game page.
  *
  * <p>
- * This panel provides user controls for:
- * <ul>
- * <li>Returning to the home page</li>
- * <li>Checking the current board against the solution</li>
- * <li>Resetting all notes on the board</li>
- * <li>Toggling notes mode on and off</li>
- * </ul>
- *
- * <p>
- * The panel is designed to be reusable across games by
- * dynamically binding to the current {@link BoardPanel} instance.
+ * This panel is a pure view component. It owns the buttons/toggle
+ * and exposes callback setters so external code can decide what each
+ * action should do.
+ * </p>
  */
 public class ControlPanel extends JPanel {
 
-    /** Button to return to the home page */
     private final JButton homeBtn = new JButton("Home");
-
-    /** Button to check the current board answer */
     private final JButton checkBtn = new JButton("Check");
-
-    /** Button to clear all notes on the board */
     private final JButton resetBtn = new JButton("Reset Notes");
+    private final JToggleButton notesModeBtn =
+        new JToggleButton("Notes Mode: OFF");
 
-    /** Toggle button for enabling/disabling notes mode */
-    private final JToggleButton notesMode = new JToggleButton("Notes Mode: OFF");
+    private Runnable onHome = () -> {};
+    private Runnable onCheck = () -> {};
+    private Runnable onResetNotes = () -> {};
+    private java.util.function.Consumer<Boolean> onToggleNotes = on -> {};
 
-    /** Currently bound game board */
-    private BoardPanel board;
-
-    /**
-     * Constructs the control panel.
-     *
-     * @param onHome callback invoked when the Home button is pressed
-     */
-    public ControlPanel(Runnable onHome) {
-        homeBtn.addActionListener(e -> onHome.run());
-
+    public ControlPanel() {
         add(homeBtn);
         add(checkBtn);
         add(resetBtn);
-        add(notesMode);
+        add(notesModeBtn);
+
+        homeBtn.addActionListener(e -> onHome.run());
+        checkBtn.addActionListener(e -> onCheck.run());
+        resetBtn.addActionListener(e -> onResetNotes.run());
+
+        notesModeBtn.addActionListener(e -> {
+            boolean on = notesModeBtn.isSelected();
+            notesModeBtn.setText(on ? "Notes Mode: ON" : "Notes Mode: OFF");
+            onToggleNotes.accept(on);
+        });
     }
 
-    /**
-     * Binds the control panel to a specific {@link BoardPanel} instance.
-     *
-     * <p>
-     * This method:
-     * <ul>
-     * <li>Clears any previous listeners</li>
-     * <li>Resets notes mode state</li>
-     * <li>Wires buttons to the new board instance</li>
-     * </ul>
-     *
-     * @param board the board to control
-     */
-    public void bindBoard(BoardPanel board) {
-        this.board = board;
+    public void setOnHome(Runnable onHome) {
+        this.onHome = onHome == null ? () -> {} : onHome;
+    }
 
-        // Remove old listeners to avoid duplicate actions
-        for (var l : checkBtn.getActionListeners()) {
-            checkBtn.removeActionListener(l);
-        }
-        for (var l : resetBtn.getActionListeners()) {
-            resetBtn.removeActionListener(l);
-        }
-        for (var l : notesMode.getActionListeners()) {
-            notesMode.removeActionListener(l);
-        }
+    public void setOnCheck(Runnable onCheck) {
+        this.onCheck = onCheck == null ? () -> {} : onCheck;
+    }
 
-        // Reset notes mode state
-        notesMode.setSelected(false);
-        notesMode.setText("Notes Mode: OFF");
-        board.setNoteMode(false);
+    public void setOnResetNotes(Runnable onResetNotes) {
+        this.onResetNotes = onResetNotes == null ? () -> {} : onResetNotes;
+    }
 
-        // Check current board against solution
-        checkBtn.addActionListener(e -> {
-            try {
-                int[] current = this.board.getCurrentSolution();
-                this.board.checkAnswer(current);
-                // System.out.println(correct);
-            } catch (Exception ex) {
-                // System.err.println(ex.getMessage());
-            }
-            this.board.requestFocusInWindow();
-        });
+    public void setOnToggleNotes(java.util.function.Consumer<Boolean> onToggleNotes) {
+        this.onToggleNotes = onToggleNotes == null ? on -> {} : onToggleNotes;
+    }
 
-        // Clear all notes on the board
-        resetBtn.addActionListener(e -> {
-            this.board.refreshBoard();
-            this.board.requestFocusInWindow();
-        });
-
-        // Toggle notes mode
-        notesMode.addActionListener(e -> {
-            boolean on = notesMode.isSelected();
-            notesMode.setText(on ? "Notes Mode: ON" : "Notes Mode: OFF");
-            this.board.setNoteMode(on);
-            this.board.requestFocusInWindow();
-        });
+    public void resetNotesModeToggle() {
+        notesModeBtn.setSelected(false);
+        notesModeBtn.setText("Notes Mode: OFF");
     }
 }
