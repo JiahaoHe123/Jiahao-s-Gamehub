@@ -50,4 +50,8 @@ public abstract class GameRecord {
     protected Path getFilePath() {
         return filePath;
     }
+
+    protected static Path getDefaultHistoryFile() {
+        return getDefaultAppDataDir("Game-hub").resolve("history.txt");
+    }
 }

@@ -36,9 +36,7 @@ public class SudokuModulePanel extends JPanel {
         homePanel = new SudokuHomePanel(record, styleSetting);
         gamePanel = new SudokuGamePanel(this::showHome, record, styleSetting);
 
-        homePanel.setOnEasy(() -> startNewGame(Difficulty.EASY));
-        homePanel.setOnMedium(() -> startNewGame(Difficulty.MEDIUM));
-        homePanel.setOnHard(() -> startNewGame(Difficulty.HARD));
+        homePanel.setOnStart(this::startNewGame);
         homePanel.setOnQuit(onBackToHub);
 
         moduleRoot.add(homePanel, "HOME");

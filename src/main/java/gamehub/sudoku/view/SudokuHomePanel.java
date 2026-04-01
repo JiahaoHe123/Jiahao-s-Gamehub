@@ -4,6 +4,9 @@ import java.awt.Component;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.util.EnumMap;
+import java.util.Map;
+import java.util.function.Consumer;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -43,16 +46,14 @@ public class SudokuHomePanel extends JPanel {
     /** Label that displays win/loss statistics for all difficulty levels. */
     private final JLabel statsLabel;
 
-    /** Difficulty buttons. */
-    private final JButton easyBtn;
-    private final JButton mediumBtn;
-    private final JButton hardBtn;
+    /** Difficulty buttons generated from Difficulty enum. */
+    private final Map<Difficulty, JButton> difficultyButtons =
+        new EnumMap<>(Difficulty.class);
+
     private final JButton quitBtn;
 
     /** External callbacks. */
-    private Runnable onEasy = () -> {};
-    private Runnable onMedium = () -> {};
-    private Runnable onHard = () -> {};
+    private Consumer<Difficulty> onStart = difficulty -> {};
     private Runnable onQuit = () -> {};
 
     public SudokuHomePanel(SudokuGameRecord record, SudokuStyleSetting styleSetting) {
@@ -72,17 +73,10 @@ public class SudokuHomePanel extends JPanel {
         statsLabel.setFont(new Font("SansSerif", Font.PLAIN, 14));
         statsLabel.setBorder(BorderFactory.createEmptyBorder(8, 0, 8, 0));
 
-        easyBtn = new JButton("Easy");
-        mediumBtn = new JButton("Medium");
-        hardBtn = new JButton("Hard");
         quitBtn = new JButton("Quit");
 
-        styleButton(easyBtn);
-        styleButton(mediumBtn);
-        styleButton(hardBtn);
         styleButton(quitBtn);
-
-        bindActions();
+        quitBtn.addActionListener(e -> onQuit.run());
         refreshStats();
 
         card.add(titleLabel);
@@ -92,12 +86,16 @@ public class SudokuHomePanel extends JPanel {
         card.add(statsLabel);
         card.add(Box.createVerticalStrut(25));
 
-        card.add(easyBtn);
-        card.add(Box.createVerticalStrut(12));
-        card.add(mediumBtn);
-        card.add(Box.createVerticalStrut(12));
-        card.add(hardBtn);
-        card.add(Box.createVerticalStrut(25));
+        for (Difficulty difficulty : Difficulty.values()) {
+            JButton btn = new JButton(difficulty.displayName());
+            styleButton(btn);
+            btn.addActionListener(e -> onStart.accept(difficulty));
+            difficultyButtons.put(difficulty, btn);
+            card.add(btn);
+            card.add(Box.createVerticalStrut(12));
+        }
+
+        card.add(Box.createVerticalStrut(13));
         card.add(quitBtn);
 
         GridBagConstraints gbc = new GridBagConstraints();
@@ -110,16 +108,8 @@ public class SudokuHomePanel extends JPanel {
         refreshTheme();
     }
 
-    public void setOnEasy(Runnable onEasy) {
-        this.onEasy = onEasy == null ? () -> {} : onEasy;
-    }
-
-    public void setOnMedium(Runnable onMedium) {
-        this.onMedium = onMedium == null ? () -> {} : onMedium;
-    }
-
-    public void setOnHard(Runnable onHard) {
-        this.onHard = onHard == null ? () -> {} : onHard;
+    public void setOnStart(Consumer<Difficulty> onStart) {
+        this.onStart = onStart == null ? difficulty -> {} : onStart;
     }
 
     public void setOnQuit(Runnable onQuit) {
@@ -142,9 +132,9 @@ public class SudokuHomePanel extends JPanel {
         subtitleLabel.setForeground(theme.getTextSecondary());
         statsLabel.setForeground(theme.getTextSecondary());
 
-        styleActionButton(easyBtn, theme);
-        styleActionButton(mediumBtn, theme);
-        styleActionButton(hardBtn, theme);
+        for (JButton button : difficultyButtons.values()) {
+            styleActionButton(button, theme);
+        }
         styleActionButton(quitBtn, theme);
     }
 
@@ -152,27 +142,24 @@ public class SudokuHomePanel extends JPanel {
      * Refreshes the statistics displayed on the home page.
      */
     public void refreshStats() {
-        int easyWin = record.getWins(Difficulty.EASY);
-        int mediumWin = record.getWins(Difficulty.MEDIUM);
-        int hardWin = record.getWins(Difficulty.HARD);
-
-        int easyLose = record.getLosses(Difficulty.EASY);
-        int mediumLose = record.getLosses(Difficulty.MEDIUM);
-        int hardLose = record.getLosses(Difficulty.HARD);
-
-        double easyRate = record.getWinRate(Difficulty.EASY);
-        double mediumRate = record.getWinRate(Difficulty.MEDIUM);
-        double hardRate = record.getWinRate(Difficulty.HARD);
+        StringBuilder statsHtml = new StringBuilder();
+        // String words = "";
+        for (Difficulty d : Difficulty.values()) {
+            statsHtml
+                .append(d.displayName())
+                .append(": ")
+                .append(record.getWins(d))
+                .append(" Wins / ")
+                .append(record.getLosses(d))
+                .append(" Losses (")
+                .append(String.format("%.1f", record.getWinRate(d)))
+                .append("%)<br>");
+        }
 
         statsLabel.setText(
             "<html><div style='text-align:center;'>"
                 + "<b>Record</b><br>"
-                + "Easy: " + easyWin + " Wins / " + easyLose + " losses ("
-                + String.format("%.1f", easyRate) + "%)<br>"
-                + "Medium: " + mediumWin + " Wins / " + mediumLose + " losses ("
-                + String.format("%.1f", mediumRate) + "%)<br>"
-                + "Hard: " + hardWin + " Wins / " + hardLose + " losses ("
-                + String.format("%.1f", hardRate) + "%)"
+                + statsHtml.toString()
                 + "</div></html>"
         );
     }
@@ -196,13 +183,6 @@ public class SudokuHomePanel extends JPanel {
         subtitle.setAlignmentX(Component.CENTER_ALIGNMENT);
         subtitle.setFont(new Font("SansSerif", Font.PLAIN, 14));
         return subtitle;
-    }
-
-    private void bindActions() {
-        easyBtn.addActionListener(e -> onEasy.run());
-        mediumBtn.addActionListener(e -> onMedium.run());
-        hardBtn.addActionListener(e -> onHard.run());
-        quitBtn.addActionListener(e -> onQuit.run());
     }
 
     private void styleButton(JButton button) {

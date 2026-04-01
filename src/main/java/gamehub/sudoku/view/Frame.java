@@ -54,9 +54,7 @@ public class Frame extends JFrame {
 
         homePanel = new SudokuHomePanel(record, styleSetting);
 
-        homePanel.setOnEasy(() -> startNewGame(Difficulty.EASY));
-        homePanel.setOnMedium(() -> startNewGame(Difficulty.MEDIUM));
-        homePanel.setOnHard(() -> startNewGame(Difficulty.HARD));
+        homePanel.setOnStart(this::startNewGame);
         homePanel.setOnQuit(() -> System.exit(0));
 
         gamePanel = new SudokuGamePanel(() -> showHome(), record, styleSetting);

@@ -34,7 +34,7 @@ import gamehub.model.GameRecord;
  * </p>
  *
  * <pre>
- * ~/Library/Application Support/Sudoku/history.txt
+ * ~/Library/Application Support/Game-hub/history.txt
  * </pre>
  *
  * <p>
@@ -341,7 +341,7 @@ public class SudokuGameRecord extends GameRecord {
      * @return a key like "wins.easy"
      */
     private static String winKey(Difficulty d) {
-        return "wins." + d.key();
+        return "wins." + d.storageKey();
     }
 
     /**
@@ -351,10 +351,7 @@ public class SudokuGameRecord extends GameRecord {
      * @return a key like "loss.easy"
      */
     private static String lossKey(Difficulty d) {
-        return "loss." + d.key();
+        return "loss." + d.storageKey();
     }
 
-    private static Path getDefaultHistoryFile() {
-        return getDefaultAppDataDir("Sudoku").resolve("history.txt");
-    }
 }
