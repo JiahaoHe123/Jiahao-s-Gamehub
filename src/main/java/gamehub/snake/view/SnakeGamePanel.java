@@ -23,6 +23,7 @@ import gamehub.snake.model.Snake;
 import gamehub.snake.model.SnakeBoardSize;
 import gamehub.snake.model.SnakeDifficulty;
 import gamehub.snake.model.SnakeStyleSetting;
+import gamehub.snake.model.SnakeGameRecord;
 
 public class SnakeGamePanel extends JPanel {
     private static final int CELL_SIZE = 24;
@@ -34,16 +35,20 @@ public class SnakeGamePanel extends JPanel {
 
     private final SnakeStyleSetting styleSettings;
     private SnakeGameController controller;
+    private final SnakeGameRecord record;
     private final JButton homepageButton;
+    private GameState lastObservedGameState;
 
     private Runnable onHomepageRequested = () -> {};
 
-    public SnakeGamePanel(SnakeStyleSetting styleSettings) {
+    public SnakeGamePanel(SnakeStyleSetting styleSettings, SnakeGameRecord record) {
         this.styleSettings = styleSettings;
+        this.record = record;
         this.controller = createController(
             styleSettings.getBoardSize(),
             styleSettings.getDifficulty()
         );
+        this.lastObservedGameState = controller.getGameState();
 
         setBackground(styleSettings.getTheme().getBackground());
         setFocusable(true);
@@ -75,6 +80,7 @@ public class SnakeGamePanel extends JPanel {
     public void startNewGameWithCountdown() {
         ensureControllerMatchesSettings();
         controller.startNewGameWithCountdown();
+        lastObservedGameState = controller.getGameState();
     }
 
     public SnakeGameController getController() {
@@ -112,6 +118,7 @@ public class SnakeGamePanel extends JPanel {
 
         if (boardSizeChanged || difficultyChanged) {
             controller = createController(selectedBoardSize, selectedDifficulty);
+            lastObservedGameState = controller.getGameState();
             setPreferredSize(
                 new Dimension(
                     selectedBoardSize.width() * CELL_SIZE,
@@ -220,6 +227,7 @@ public class SnakeGamePanel extends JPanel {
         drawGrid(g2, boardOffsetX, boardOffsetY, cellSize, theme);
         drawFood(g2, boardOffsetX, boardOffsetY, cellSize, theme);
         drawSnake(g2, boardOffsetX, boardOffsetY, cellSize);
+        recordScoreOnGameOverTransition();
         drawHud(
             g2,
             boardOffsetX,
@@ -262,6 +270,21 @@ public class SnakeGamePanel extends JPanel {
         }
 
         g2.dispose();
+    }
+
+    private void recordScoreOnGameOverTransition() {
+        GameState currentState = controller.getGameState();
+        if (
+            currentState == GameState.GAME_OVER
+                && lastObservedGameState != GameState.GAME_OVER
+        ) {
+            record.recordScore(
+                styleSettings.getDifficulty(),
+                styleSettings.getBoardSize(),
+                controller.getScore()
+            );
+        }
+        lastObservedGameState = currentState;
     }
 
     private void drawGrid(

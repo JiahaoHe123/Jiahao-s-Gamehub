@@ -11,6 +11,7 @@ import gamehub.model.AppTheme;
 import gamehub.snake.controller.SnakeNavigationController;
 import gamehub.snake.model.SnakeTheme;
 import gamehub.snake.model.SnakeStyleSetting;
+import gamehub.snake.model.SnakeGameRecord;
 
 /**
  * Root snake module panel that can be embedded in Game Hub.
@@ -33,9 +34,11 @@ public class SnakeModulePanel extends JPanel {
         CardLayout cardLayout = new CardLayout();
         JPanel moduleRoot = new JPanel(cardLayout);
 
-        homePanel = new SnakeHomePanel(styleSetting);
+        SnakeGameRecord record = new SnakeGameRecord();
+
+        homePanel = new SnakeHomePanel(styleSetting, record);
         customizationPanel = new StyleCustomizationPanel(styleSetting);
-        gamePanel = new SnakeGamePanel(styleSetting);
+        gamePanel = new SnakeGamePanel(styleSetting, record);
         customizationPanel.setThemeManagedExternally(true);
 
         navigationController = new SnakeNavigationController(

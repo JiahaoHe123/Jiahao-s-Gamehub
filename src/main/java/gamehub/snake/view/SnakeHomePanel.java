@@ -3,12 +3,15 @@ package gamehub.snake.view;
 import javax.swing.*;
 import java.awt.*;
 
+import gamehub.snake.model.SnakeBoardSize;
+import gamehub.snake.model.SnakeGameRecord;
 import gamehub.snake.model.SnakeTheme;
 import gamehub.snake.model.SnakeDifficulty;
 import gamehub.snake.model.SnakeStyleSetting;
 
 public class SnakeHomePanel extends JPanel {
     private final SnakeStyleSetting styleSettings;
+    private final SnakeGameRecord record;
     private final JPanel card;
     private final JLabel titleLabel;
     // private final JLabel subtitleLabel;
@@ -18,10 +21,10 @@ public class SnakeHomePanel extends JPanel {
     private final JButton startButton;
     private final JButton customizeButton;
 
-    public SnakeHomePanel(SnakeStyleSetting styleSettings) {
+    public SnakeHomePanel(SnakeStyleSetting styleSettings, SnakeGameRecord record) {
         super(new GridBagLayout());
         this.styleSettings = styleSettings;
-
+        this.record = record;
         setBorder(
             BorderFactory.createEmptyBorder(
                 40, 40, 40, 40
@@ -154,7 +157,30 @@ public class SnakeHomePanel extends JPanel {
         statsLabel.setForeground(theme.getTextSoft());
         difficultyLabel.setForeground(theme.getTextSoft());
         SnakeDifficulty difficulty = styleSettings.getDifficulty();
-        difficultyLabel.setText("Difficulty: " + difficulty.displayName());
+        SnakeBoardSize boardSize = styleSettings.getBoardSize();
+        difficultyLabel.setText(
+            "Difficulty: "
+                + difficulty.displayName()
+                + "  |  Board: "
+                + boardSize.displayName()
+        );
+
+        int selectedBest = record.getScore(difficulty, boardSize);
+        int overallBest = 0;
+        for (SnakeDifficulty d : SnakeDifficulty.values()) {
+            for (SnakeBoardSize b : SnakeBoardSize.values()) {
+                overallBest = Math.max(overallBest, record.getScore(d, b));
+            }
+        }
+        statsLabel.setText(
+            "<html><div style='text-align:center'>"
+                + "Selected Best: "
+                + selectedBest
+                + "<br/>"
+                + "Overall Best: "
+                + overallBest
+                + "</div></html>"
+        );
 
         startButton.setForeground(theme.getBackground());
         startButton.setBackground(theme.getAccent());

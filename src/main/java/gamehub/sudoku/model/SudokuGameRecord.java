@@ -112,10 +112,11 @@ public class SudokuGameRecord extends GameRecord {
     public SudokuGameRecord(Path filePath) {
         super(filePath);
         // init defaults
-        for (SudokuDifficulty d : SudokuDifficulty.values()) {
-            wins.put(winKey(d), 0);
-            wins.put(lossKey(d), 0);
-        }
+        initializeDefaults();
+        // for (SudokuDifficulty d : SudokuDifficulty.values()) {
+        //     wins.put(winKey(d), 0);
+        //     wins.put(lossKey(d), 0);
+        // }
         load(); // Load persisted values (best-effort).
     }
 
@@ -227,6 +228,13 @@ public class SudokuGameRecord extends GameRecord {
             wins.put(lossKey(d), 0);
         }
         save();
+    }
+
+    private void initializeDefaults() {
+        for (SudokuDifficulty d : SudokuDifficulty.values()) {
+            wins.put(winKey(d), 0);
+            wins.put(lossKey(d), 0);
+        }
     }
 
     // -------------------- persistence --------------------
