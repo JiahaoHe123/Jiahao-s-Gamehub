@@ -64,6 +64,11 @@ import gamehub.model.GameRecord;
  */
 public class SudokuGameRecord extends GameRecord {
 
+    private static final String FILE_NAME = "Sudoku-history.txt";
+    private static final String LEGACY_FILE_NAME = "history.txt";
+    private static final String LEGACY_APP_NAME = "Sudoku";
+    private static final String APP_NAME = "Game-hub";
+
     /**
      * In-memory store for counters.
      *
@@ -75,7 +80,22 @@ public class SudokuGameRecord extends GameRecord {
     private final Map<String, Integer> wins = new HashMap<>();
 
     public SudokuGameRecord() {
-        this(getDefaultHistoryFile());
+        this(resolveDefaultHistoryFile());
+    }
+
+    private static Path resolveDefaultHistoryFile() {
+        Path target = getDefaultHistoryFile(FILE_NAME);
+        try {
+            target = migrateFileIfNeeded(LEGACY_APP_NAME, FILE_NAME, APP_NAME, FILE_NAME);
+            target = migrateFileIfNeeded(
+                LEGACY_APP_NAME,
+                LEGACY_FILE_NAME,
+                APP_NAME,
+                FILE_NAME
+            );
+        } catch (IOException ignored) {
+        }
+        return target;
     }
 
 

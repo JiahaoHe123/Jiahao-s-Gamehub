@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 
 public abstract class GameRecord {
     private final Path filePath;
@@ -51,7 +52,41 @@ public abstract class GameRecord {
         return filePath;
     }
 
-    protected static Path getDefaultHistoryFile() {
-        return getDefaultAppDataDir("Game-hub").resolve("history.txt");
+    protected static Path getDefaultHistoryFile(String fileName) {
+        return getDefaultAppDataDir("Game-hub").resolve(fileName);
+    }
+
+    protected static Path migrateFileIfNeeded(
+        String oldAppName,
+        String oldFileName,
+        String newAppName,
+        String newFileName
+    ) throws IOException {
+        Path oldFile = getDefaultAppDataDir(oldAppName).resolve(oldFileName);
+        Path newFile = getDefaultAppDataDir(newAppName).resolve(newFileName);
+
+        if (Files.exists(newFile)) {
+            return newFile;
+        }
+
+        if (!Files.exists(oldFile)) {
+            return newFile;
+        }
+
+        Path parent = newFile.getParent();
+        if (parent != null) {
+            Files.createDirectories(parent);
+        }
+
+        moveWithFallback(oldFile, newFile);
+        return newFile;
+    }
+
+    private static void moveWithFallback(Path source, Path target) throws IOException {
+        try {
+            Files.move(source, target, StandardCopyOption.ATOMIC_MOVE);
+        } catch (IOException ignored) {
+            Files.move(source, target, StandardCopyOption.REPLACE_EXISTING);
+        }
     }
 }
