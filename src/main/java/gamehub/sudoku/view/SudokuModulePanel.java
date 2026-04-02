@@ -10,7 +10,7 @@ import javax.swing.JPanel;
 import gamehub.model.AppTheme;
 import gamehub.sudoku.model.SudokuDifficulty;
 import gamehub.sudoku.model.SudokuGameRecord;
-import gamehub.sudoku.model.GameTheme;
+import gamehub.sudoku.model.SudokuTheme;
 import gamehub.sudoku.model.SudokuStyleSetting;
 
 /**
@@ -48,10 +48,10 @@ public class SudokuModulePanel extends JPanel {
         backButton.addActionListener(event -> onBackToHub.run());
         themeButton = new JButton("Theme: Light");
         themeButton.addActionListener(event -> {
-            GameTheme nextTheme =
-                styleSetting.getTheme() == GameTheme.DARK
-                    ? GameTheme.LIGHT
-                    : GameTheme.DARK;
+            SudokuTheme nextTheme =
+                styleSetting.getTheme() == SudokuTheme.DARK
+                    ? SudokuTheme.LIGHT
+                    : SudokuTheme.DARK;
             styleSetting.setTheme(nextTheme);
             refreshThemeViews();
         });
@@ -74,7 +74,7 @@ public class SudokuModulePanel extends JPanel {
         if (theme == null) {
             return;
         }
-        styleSetting.setTheme(theme.isDark() ? GameTheme.DARK : GameTheme.LIGHT);
+        styleSetting.setTheme(theme.isDark() ? SudokuTheme.DARK : SudokuTheme.LIGHT);
 
         refreshThemeViews();
     }
@@ -84,7 +84,7 @@ public class SudokuModulePanel extends JPanel {
         homePanel.refreshTheme();
         gamePanel.refreshTheme();
 
-        GameTheme currentTheme = styleSetting.getTheme();
+        SudokuTheme currentTheme = styleSetting.getTheme();
         topBar.setBackground(currentTheme.getTopBarBackground());
         backButton.setForeground(currentTheme.getTextPrimary());
         backButton.setBackground(currentTheme.getButtonBackground());
@@ -108,7 +108,7 @@ public class SudokuModulePanel extends JPanel {
         );
         themeButton.setOpaque(true);
         themeButton.setText(
-            currentTheme == GameTheme.DARK ? "Theme: Dark" : "Theme: Light"
+            currentTheme == SudokuTheme.DARK ? "Theme: Dark" : "Theme: Light"
         );
 
         moduleRoot.setBackground(currentTheme.getPageBackground());

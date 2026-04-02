@@ -13,7 +13,7 @@ import javax.swing.SwingUtilities;
 import gamehub.sudoku.controller.SudokuGameController;
 import gamehub.sudoku.model.SudokuDifficulty;
 import gamehub.sudoku.model.SudokuGameRecord;
-import gamehub.sudoku.model.GameTheme;
+import gamehub.sudoku.model.SudokuTheme;
 import gamehub.sudoku.model.SudokuStyleSetting;
 import gamehub.sudoku.model.SudokuBoard;
 import gamehub.sudoku.util.SquareWrap;
@@ -126,7 +126,7 @@ public class SudokuGamePanel extends JPanel {
     }
 
     public void refreshTheme() {
-        GameTheme theme = styleSetting.getTheme();
+        SudokuTheme theme = styleSetting.getTheme();
 
         setBackground(theme.getPageBackground());
         centerWrap.setBackground(getBackground());

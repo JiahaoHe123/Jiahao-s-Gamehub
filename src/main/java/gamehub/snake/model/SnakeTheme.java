@@ -2,7 +2,7 @@ package gamehub.snake.model;
 
 import java.awt.Color;
 
-public class GameTheme {
+public class SnakeTheme {
     private final Color background;
     private final Color cardBackground;
     private final Color accent;
@@ -16,7 +16,7 @@ public class GameTheme {
     private final Color buttonBackground;
     private final Color buttonBorder;
 
-    public static final GameTheme DARK = new GameTheme(
+    public static final SnakeTheme DARK = new SnakeTheme(
         new Color(12, 18, 12), // background
         new Color(18, 28, 18), // card background
         new Color(68, 214, 44), // accent
@@ -32,7 +32,7 @@ public class GameTheme {
         new Color(68, 214, 44, 150) // button border
     );
 
-    public static final GameTheme LIGHT = new GameTheme(
+    public static final SnakeTheme LIGHT = new SnakeTheme(
         new Color(243, 249, 243),
         new Color(249, 227, 249),
         new Color(187, 41, 211),
@@ -47,7 +47,7 @@ public class GameTheme {
         new Color(187, 41, 211, 105)
     );
 
-    public GameTheme(
+    public SnakeTheme(
         Color background,
         Color cardBackground,
         Color accent,

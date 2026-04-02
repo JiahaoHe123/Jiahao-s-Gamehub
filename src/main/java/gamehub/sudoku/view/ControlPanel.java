@@ -6,7 +6,7 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JToggleButton;
 
-import gamehub.sudoku.model.GameTheme;
+import gamehub.sudoku.model.SudokuTheme;
 import gamehub.sudoku.model.SudokuStyleSetting;
 
 /**
@@ -78,7 +78,7 @@ public class ControlPanel extends JPanel {
     }
 
     public void refreshTheme() {
-        GameTheme theme = styleSetting.getTheme();
+        SudokuTheme theme = styleSetting.getTheme();
 
         setBackground(theme.getTopBarBackground());
 

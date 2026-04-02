@@ -2,7 +2,7 @@ package gamehub.sudoku.model;
 
 import java.awt.Color;
 
-public class GameTheme {
+public class SudokuTheme {
     private final Color pageBackground;
     private final Color cardBackground;
     private final Color cardBorder;
@@ -19,7 +19,7 @@ public class GameTheme {
     private final Color wrongCell;
     private final Color wrongHighlight;
 
-    public static final GameTheme LIGHT = new GameTheme(
+    public static final SudokuTheme LIGHT = new SudokuTheme(
         new Color(245, 245, 245),
         new Color(255, 255, 255),
         new Color(220, 220, 220),
@@ -37,7 +37,7 @@ public class GameTheme {
         new Color(255, 165, 0)
     );
 
-    public static final GameTheme DARK = new GameTheme(
+    public static final SudokuTheme DARK = new SudokuTheme(
         new Color(12, 18, 12),
         new Color(18, 28, 18),
         new Color(68, 214, 44, 150),
@@ -55,7 +55,7 @@ public class GameTheme {
         new Color(180, 120, 72)
     );
 
-    public GameTheme(
+    public SudokuTheme(
         Color pageBackground,
         Color cardBackground,
         Color cardBorder,

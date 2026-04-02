@@ -5,7 +5,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import gamehub.sudoku.controller.SudokuGameController;
-import gamehub.sudoku.model.GameTheme;
+import gamehub.sudoku.model.SudokuTheme;
 import gamehub.sudoku.model.SudokuStyleSetting;
 import gamehub.sudoku.model.SudokuBoard;
 
@@ -269,7 +269,7 @@ public class BoardPanel extends JPanel {
         }
     }
 
-    private GameTheme theme() {
+    private SudokuTheme theme() {
         return styleSetting.getTheme();
     }
 }

@@ -18,7 +18,7 @@ import javax.swing.SwingConstants;
 
 import gamehub.sudoku.model.SudokuDifficulty;
 import gamehub.sudoku.model.SudokuGameRecord;
-import gamehub.sudoku.model.GameTheme;
+import gamehub.sudoku.model.SudokuTheme;
 import gamehub.sudoku.model.SudokuStyleSetting;
 
 /**
@@ -117,7 +117,7 @@ public class SudokuHomePanel extends JPanel {
     }
 
     public void refreshTheme() {
-        GameTheme theme = styleSetting.getTheme();
+        SudokuTheme theme = styleSetting.getTheme();
 
         setBackground(theme.getPageBackground());
         card.setBackground(theme.getCardBackground());
@@ -193,7 +193,7 @@ public class SudokuHomePanel extends JPanel {
         button.setPreferredSize(new java.awt.Dimension(260, 40));
     }
 
-    private void styleActionButton(JButton button, GameTheme theme) {
+    private void styleActionButton(JButton button, SudokuTheme theme) {
         button.setForeground(theme.getTextPrimary());
         button.setBackground(theme.getButtonBackground());
         button.setBorder(BorderFactory.createLineBorder(theme.getButtonBorder(), 1, true));

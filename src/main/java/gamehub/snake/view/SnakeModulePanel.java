@@ -9,7 +9,7 @@ import javax.swing.JPanel;
 
 import gamehub.model.AppTheme;
 import gamehub.snake.controller.SnakeNavigationController;
-import gamehub.snake.model.GameTheme;
+import gamehub.snake.model.SnakeTheme;
 import gamehub.snake.model.SnakeStyleSetting;
 
 /**
@@ -19,9 +19,9 @@ public class SnakeModulePanel extends JPanel {
 
     private final SnakeStyleSetting styleSetting;
     private final SnakeNavigationController navigationController;
-    private final HomePanel homePanel;
+    private final SnakeHomePanel homePanel;
     private final StyleCustomizationPanel customizationPanel;
-    private final GamePanel gamePanel;
+    private final SnakeGamePanel gamePanel;
     private final JPanel topBar;
     private final JButton backButton;
 
@@ -33,9 +33,9 @@ public class SnakeModulePanel extends JPanel {
         CardLayout cardLayout = new CardLayout();
         JPanel moduleRoot = new JPanel(cardLayout);
 
-        homePanel = new HomePanel(styleSetting);
+        homePanel = new SnakeHomePanel(styleSetting);
         customizationPanel = new StyleCustomizationPanel(styleSetting);
-        gamePanel = new GamePanel(styleSetting);
+        gamePanel = new SnakeGamePanel(styleSetting);
         customizationPanel.setThemeManagedExternally(true);
 
         navigationController = new SnakeNavigationController(
@@ -68,13 +68,13 @@ public class SnakeModulePanel extends JPanel {
             return;
         }
 
-        styleSetting.setTheme(appTheme.isDark() ? GameTheme.DARK : GameTheme.LIGHT);
+        styleSetting.setTheme(appTheme.isDark() ? SnakeTheme.DARK : SnakeTheme.LIGHT);
 
         homePanel.refreshTheme();
         gamePanel.refreshTheme();
         customizationPanel.syncFromSettings();
 
-        GameTheme theme = styleSetting.getTheme();
+        SnakeTheme theme = styleSetting.getTheme();
         topBar.setBackground(theme.getHudBackground());
         backButton.setForeground(theme.getText());
         backButton.setBackground(theme.getButtonBackground());

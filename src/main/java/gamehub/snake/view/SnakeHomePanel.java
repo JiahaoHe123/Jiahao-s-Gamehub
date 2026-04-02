@@ -3,11 +3,11 @@ package gamehub.snake.view;
 import javax.swing.*;
 import java.awt.*;
 
-import gamehub.snake.model.GameTheme;
+import gamehub.snake.model.SnakeTheme;
 import gamehub.snake.model.SnakeDifficulty;
 import gamehub.snake.model.SnakeStyleSetting;
 
-public class HomePanel extends JPanel {
+public class SnakeHomePanel extends JPanel {
     private final SnakeStyleSetting styleSettings;
     private final JPanel card;
     private final JLabel titleLabel;
@@ -18,7 +18,7 @@ public class HomePanel extends JPanel {
     private final JButton startButton;
     private final JButton customizeButton;
 
-    public HomePanel(SnakeStyleSetting styleSettings) {
+    public SnakeHomePanel(SnakeStyleSetting styleSettings) {
         super(new GridBagLayout());
         this.styleSettings = styleSettings;
 
@@ -37,7 +37,7 @@ public class HomePanel extends JPanel {
                     RenderingHints.VALUE_ANTIALIAS_ON
                 );
 
-                GameTheme theme = HomePanel.this.styleSettings.getTheme();
+                SnakeTheme theme = SnakeHomePanel.this.styleSettings.getTheme();
 
                 g2.setColor(theme.getCardBackground());
                 g2.fillRoundRect(
@@ -146,7 +146,7 @@ public class HomePanel extends JPanel {
     }
 
     public void refreshTheme() {
-        GameTheme theme = styleSettings.getTheme();
+        SnakeTheme theme = styleSettings.getTheme();
         setBackground(theme.getBackground());
 
         titleLabel.setForeground(theme.getAccent());

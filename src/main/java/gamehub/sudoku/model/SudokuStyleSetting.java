@@ -1,13 +1,13 @@
 package gamehub.sudoku.model;
 
 public class SudokuStyleSetting {
-    private GameTheme theme = GameTheme.LIGHT;
+    private SudokuTheme theme = SudokuTheme.LIGHT;
 
-    public GameTheme getTheme() {
+    public SudokuTheme getTheme() {
         return theme;
     }
 
-    public void setTheme(GameTheme theme) {
+    public void setTheme(SudokuTheme theme) {
         if (theme != null) {
             this.theme = theme;
         }

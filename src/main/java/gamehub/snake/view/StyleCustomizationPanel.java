@@ -2,7 +2,7 @@ package gamehub.snake.view;
 
 import javax.swing.*;
 
-import gamehub.snake.model.GameTheme;
+import gamehub.snake.model.SnakeTheme;
 import gamehub.snake.model.SnakeDifficulty;
 import gamehub.snake.model.SnakeStyleSetting;
 
@@ -160,7 +160,7 @@ public class StyleCustomizationPanel extends JPanel {
 
         themeCombo = new JComboBox<>(new String[] {"Dark", "Light"});
         themeCombo.setSelectedItem(
-            styleSettings.getTheme() == GameTheme.DARK ? "Dark" : "Light"
+            styleSettings.getTheme() == SnakeTheme.DARK ? "Dark" : "Light"
         );
 
         themeCombo.addActionListener(event -> {
@@ -169,9 +169,9 @@ public class StyleCustomizationPanel extends JPanel {
             }
             String selected = (String) themeCombo.getSelectedItem();
             if ("Light".equals(selected)) {
-                styleSettings.setTheme(GameTheme.LIGHT);
+                styleSettings.setTheme(SnakeTheme.LIGHT);
             } else {
-                styleSettings.setTheme(GameTheme.DARK);
+                styleSettings.setTheme(SnakeTheme.DARK);
             }
             refreshTheme();
         });
@@ -318,7 +318,7 @@ public class StyleCustomizationPanel extends JPanel {
         colorPresetCombo
             .setSelectedItem(styleSettings.getColorPreset().getLabel());
         themeCombo.setSelectedItem(
-            styleSettings.getTheme() == GameTheme.LIGHT ? "Light" : "Dark"
+            styleSettings.getTheme() == SnakeTheme.LIGHT ? "Light" : "Dark"
         );
         difficultyCombo.setSelectedItem(styleSettings.getDifficulty().displayName());
         refreshPreview();
@@ -326,7 +326,7 @@ public class StyleCustomizationPanel extends JPanel {
     }
 
     public void refreshTheme() {
-        GameTheme theme = styleSettings.getTheme();
+        SnakeTheme theme = styleSettings.getTheme();
 
         setBackground(theme.getBackground());
         content.setBackground(theme.getBackground());

@@ -18,12 +18,12 @@ import javax.swing.KeyStroke;
 import gamehub.snake.controller.SnakeGameController;
 import gamehub.snake.model.Direction;
 import gamehub.snake.model.GameState;
-import gamehub.snake.model.GameTheme;
+import gamehub.snake.model.SnakeTheme;
 import gamehub.snake.model.Snake;
 import gamehub.snake.model.SnakeDifficulty;
 import gamehub.snake.model.SnakeStyleSetting;
 
-public class GamePanel extends JPanel {
+public class SnakeGamePanel extends JPanel {
     private static final int CELL_SIZE = 24;
     private static final int MIN_CELL_SIZE = 8;
     private static final int BOARD_WIDTH = 25;
@@ -39,7 +39,7 @@ public class GamePanel extends JPanel {
 
     private Runnable onHomepageRequested = () -> {};
 
-    public GamePanel(SnakeStyleSetting styleSettings) {
+    public SnakeGamePanel(SnakeStyleSetting styleSettings) {
         this.styleSettings = styleSettings;
         this.controller = createController(styleSettings.getDifficulty());
 
@@ -105,7 +105,7 @@ public class GamePanel extends JPanel {
     }
 
     public void refreshTheme() {
-        GameTheme theme = styleSettings.getTheme();
+        SnakeTheme theme = styleSettings.getTheme();
         setBackground(theme.getBackground());
         homepageButton.setForeground(theme.getText());
         homepageButton.setBackground(theme.getButtonBackground());
@@ -183,7 +183,7 @@ public class GamePanel extends JPanel {
         int boardOffsetY = insets.top
             + Math.max((availableHeight - gameAreaHeight) / 2, 0);
 
-        GameTheme theme = styleSettings.getTheme();
+        SnakeTheme theme = styleSettings.getTheme();
 
         g2.setColor(theme.getBackground());
         g2.fillRect(0, 0, getWidth(), getHeight());
@@ -240,7 +240,7 @@ public class GamePanel extends JPanel {
         int boardOffsetX,
         int boardOffsetY,
         int cellSize,
-        GameTheme theme
+        SnakeTheme theme
     ) {
         for (int x = 0; x <= BOARD_WIDTH; x++) {
             int drawX = boardOffsetX + x * cellSize;
@@ -278,7 +278,7 @@ public class GamePanel extends JPanel {
         int boardOffsetX,
         int boardOffsetY,
         int cellSize,
-        GameTheme theme
+        SnakeTheme theme
     ) {
         Point food = controller.getFood();
         if (food == null) {
@@ -372,7 +372,7 @@ public class GamePanel extends JPanel {
         int boardPixelHeight,
         int hudHeight,
         int cellSize,
-        GameTheme theme
+        SnakeTheme theme
     ) {
         int hudY = boardOffsetY + boardPixelHeight + 5;
         int margin = Math.max(8, cellSize / 2);
@@ -452,7 +452,7 @@ public class GamePanel extends JPanel {
         int boardPixelWidth,
         int boardPixelHeight,
         int cellSize,
-        GameTheme theme
+        SnakeTheme theme
     ) {
         long millisRemaining =
             controller.getCountdownEndTimeMillis() - System.currentTimeMillis();
@@ -489,7 +489,7 @@ public class GamePanel extends JPanel {
         int boardPixelWidth,
         int boardPixelHeight,
         int cellSize,
-        GameTheme theme
+        SnakeTheme theme
     ) {
         String line1 = "Game Over";
         String line2 = "Press R or Enter to restart";

@@ -14,16 +14,16 @@ public class SnakeNavigationController {
 
     private final JPanel root;
     private final CardLayout cardLayout;
-    private final HomePanel homePanel;
+    private final SnakeHomePanel homePanel;
     private final StyleCustomizationPanel customizationPage;
-    private final GamePanel gamePanel;
+    private final SnakeGamePanel gamePanel;
 
     public SnakeNavigationController(
         JPanel root,
         CardLayout cardLayout,
-        HomePanel homePanel,
+        SnakeHomePanel homePanel,
         StyleCustomizationPanel customizationPage,
-        GamePanel gamePanel
+        SnakeGamePanel gamePanel
     ) {
         this.root = root;
         this.cardLayout = cardLayout;

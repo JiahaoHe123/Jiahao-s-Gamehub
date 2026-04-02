@@ -65,7 +65,7 @@ public class SnakeStyleSetting {
         }
     }
 
-    private GameTheme theme = GameTheme.DARK;
+    private SnakeTheme theme = SnakeTheme.DARK;
     private RenderMode renderMode = RenderMode.BLOCKS;
     private String pattern = "<>";
     private ColorPreset colorPreset = ColorPreset.CLASSIC_GREEN;
@@ -108,11 +108,11 @@ public class SnakeStyleSetting {
         return colorPreset.getBodyColor();
     }
 
-    public GameTheme getTheme() {
+    public SnakeTheme getTheme() {
         return theme;
     }
 
-    public void setTheme(GameTheme theme) {
+    public void setTheme(SnakeTheme theme) {
         if (theme != null) {
             this.theme = theme;
         }
