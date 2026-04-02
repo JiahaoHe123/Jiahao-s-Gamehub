@@ -2,6 +2,7 @@ package gamehub.sudoku.view;
 
 import java.awt.Component;
 import java.awt.Font;
+import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.util.EnumMap;
@@ -14,8 +15,11 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
 
+import gamehub.view.ViewportWidthPanel;
 import gamehub.sudoku.model.SudokuDifficulty;
 import gamehub.sudoku.model.SudokuGameRecord;
 import gamehub.sudoku.model.SudokuTheme;
@@ -38,6 +42,8 @@ public class SudokuHomePanel extends JPanel {
     /** Persistent game record used to display statistics. */
     private final SudokuGameRecord record;
     private final SudokuStyleSetting styleSetting;
+    private final JPanel content;
+    private final JScrollPane scrollPane;
 
     private final JPanel card;
     private final JLabel titleLabel;
@@ -57,11 +63,14 @@ public class SudokuHomePanel extends JPanel {
     private Runnable onQuit = () -> {};
 
     public SudokuHomePanel(SudokuGameRecord record, SudokuStyleSetting styleSetting) {
-        super(new GridBagLayout());
+        super(new BorderLayout());
         this.record = record;
         this.styleSetting = styleSetting;
 
-        setBorder(BorderFactory.createEmptyBorder(30, 30, 30, 30));
+        setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+
+        content = new ViewportWidthPanel(new GridBagLayout());
+        content.setOpaque(false);
 
         card = buildCard();
 
@@ -102,8 +111,22 @@ public class SudokuHomePanel extends JPanel {
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.anchor = GridBagConstraints.CENTER;
+        gbc.weightx = 1.0;
+        gbc.weighty = 1.0;
+        gbc.fill = GridBagConstraints.NONE;
+        gbc.insets = new java.awt.Insets(10, 10, 10, 10);
 
-        add(card, gbc);
+        content.add(card, gbc);
+
+        scrollPane = new JScrollPane(
+            content,
+            ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
+            ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER
+        );
+        scrollPane.setBorder(BorderFactory.createEmptyBorder());
+        scrollPane.getVerticalScrollBar().setUnitIncrement(16);
+
+        add(scrollPane, BorderLayout.CENTER);
 
         refreshTheme();
     }
@@ -120,6 +143,8 @@ public class SudokuHomePanel extends JPanel {
         SudokuTheme theme = styleSetting.getTheme();
 
         setBackground(theme.getPageBackground());
+        content.setBackground(theme.getPageBackground());
+        scrollPane.getViewport().setBackground(theme.getPageBackground());
         card.setBackground(theme.getCardBackground());
         card.setBorder(
             BorderFactory.createCompoundBorder(

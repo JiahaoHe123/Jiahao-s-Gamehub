@@ -56,6 +56,7 @@ public class BoardPanel extends JPanel {
 
     public void refreshTheme() {
         setBackground(theme().getBoardBackground());
+        applyCellColors();
         refreshHighlights();
     }
 
@@ -179,6 +180,9 @@ public class BoardPanel extends JPanel {
             int col = index % SIZE;
 
             CellButton btn = new CellButton(text);
+            btn.setForeground(theme().getTextPrimary());
+            btn.setNoteColor(theme().getTextSecondary());
+            btn.setHighlightedNoteColor(Color.BLUE);
 
             if (!text.isEmpty()) {
                 btn.setFixed(true);
@@ -226,6 +230,8 @@ public class BoardPanel extends JPanel {
     }
 
     private void highlightSameNumbers(String value) {
+        applyCellColors();
+
         Integer target = null;
         if (
             value != null
@@ -265,6 +271,18 @@ public class BoardPanel extends JPanel {
                 }
 
                 btn.repaint();
+            }
+        }
+    }
+
+    private void applyCellColors() {
+        SudokuTheme currentTheme = theme();
+        for (int r = 0; r < SIZE; r++) {
+            for (int c = 0; c < SIZE; c++) {
+                CellButton btn = cells[r][c];
+                btn.setForeground(currentTheme.getTextPrimary());
+                btn.setNoteColor(currentTheme.getTextSecondary());
+                btn.setHighlightedNoteColor(Color.BLUE);
             }
         }
     }

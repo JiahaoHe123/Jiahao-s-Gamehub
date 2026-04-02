@@ -29,6 +29,7 @@ public class SnakeGamePanel extends JPanel {
     private static final int CELL_SIZE = 24;
     private static final int MIN_CELL_SIZE = 8;
     private static final int HUD_HEIGHT = 60;
+    private static final int HUD_TOP_GAP = 5;
     private static final double HUD_HEIGHT_IN_CELL =
         HUD_HEIGHT / (double) CELL_SIZE;
     private static final int COUNTDOWN_SECONDS = 3;
@@ -209,7 +210,7 @@ public class SnakeGamePanel extends JPanel {
 
         int hudHeight = Math.max(
             (int) Math.round(cellSize * HUD_HEIGHT_IN_CELL),
-            28
+            44
         );
         int boardPixelWidth = boardWidth * cellSize;
         int boardPixelHeight = boardHeight * cellSize;
@@ -228,6 +229,14 @@ public class SnakeGamePanel extends JPanel {
         drawFood(g2, boardOffsetX, boardOffsetY, cellSize, theme);
         drawSnake(g2, boardOffsetX, boardOffsetY, cellSize);
         recordScoreOnGameOverTransition();
+        layoutHudButtons(
+            boardOffsetX,
+            boardOffsetY,
+            boardPixelWidth,
+            boardPixelHeight,
+            hudHeight,
+            cellSize
+        );
         drawHud(
             g2,
             boardOffsetX,
@@ -237,14 +246,6 @@ public class SnakeGamePanel extends JPanel {
             hudHeight,
             cellSize,
             theme
-        );
-        layoutHudButtons(
-            boardOffsetX,
-            boardOffsetY,
-            boardPixelWidth,
-            boardPixelHeight,
-            hudHeight,
-            cellSize
         );
 
         if (controller.getGameState() == GameState.COUNTDOWN) {
@@ -429,10 +430,12 @@ public class SnakeGamePanel extends JPanel {
         int cellSize,
         SnakeTheme theme
     ) {
-        int hudY = boardOffsetY + boardPixelHeight + 5;
+        int hudY = boardOffsetY + boardPixelHeight + HUD_TOP_GAP;
         int margin = Math.max(8, cellSize / 2);
         int bigFont = Math.max(12, (int) Math.round(cellSize * 0.85));
         int smallFont = Math.max(10, (int) Math.round(cellSize * 0.58));
+        int buttonWidth = hudButtonWidth(cellSize);
+        int buttonGap = Math.max(8, cellSize / 3);
 
         g2.setColor(theme.getHudBackground());
         g2.fillRoundRect(
@@ -459,9 +462,15 @@ public class SnakeGamePanel extends JPanel {
 
         g2.setColor(theme.getTextSoft());
         g2.setFont(new Font("Menlo", Font.PLAIN, smallFont));
+        int controlsTextWidth = Math.max(150, (int) Math.round(cellSize * 9.5));
         int controlsX = boardOffsetX
             + boardPixelWidth
-            - Math.max(150, (int) Math.round(cellSize * 9.5));
+            - margin
+            - buttonWidth
+            - buttonGap
+            - controlsTextWidth;
+        int minControlsX = boardOffsetX + Math.max(135, boardPixelWidth / 3);
+        controlsX = Math.max(minControlsX, controlsX);
 
         g2.drawString(
             "Move: Arrows / WASD",
@@ -483,21 +492,30 @@ public class SnakeGamePanel extends JPanel {
         int hudHeight,
         int cellSize
     ) {
-        int hudY = boardOffsetY + boardPixelHeight;
-        int buttonWidth = Math.max(90, (int) Math.round(cellSize * 4.8));
-        int buttonHeight = Math.max(26, (int) Math.round(hudHeight * 0.58));
+        int hudY = boardOffsetY + boardPixelHeight + HUD_TOP_GAP;
+        int margin = Math.max(8, cellSize / 2);
+        int buttonWidth = hudButtonWidth(cellSize);
+        int buttonHeight = hudButtonHeight(hudHeight);
 
-        int startX = boardOffsetX + (boardPixelWidth - buttonWidth) / 2;
+        int startX = boardOffsetX + boardPixelWidth - margin - buttonWidth;
         int y = hudY + (hudHeight - buttonHeight) / 2;
 
         homepageButton.setFont(
             new Font(
                 "Menlo",
-                Font.PLAIN,
+                Font.BOLD,
                 Math.max(11, (int) Math.round(cellSize * 0.56))
             )
         );
         homepageButton.setBounds(startX, y, buttonWidth, buttonHeight);
+    }
+
+    private int hudButtonWidth(int cellSize) {
+        return Math.max(104, (int) Math.round(cellSize * 5.4));
+    }
+
+    private int hudButtonHeight(int hudHeight) {
+        return Math.max(28, (int) Math.round(hudHeight * 0.6));
     }
 
     private void drawCountdown(

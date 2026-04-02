@@ -38,6 +38,8 @@ public class CellButton extends JButton {
     private State state = State.NORMAL;
     private final Set<Integer> notes = new LinkedHashSet<>();
     private int highlightedNote = 0;
+    private Color noteColor = Color.DARK_GRAY;
+    private Color highlightedNoteColor = Color.BLUE;
 
     public CellButton(String text) {
         super(text);
@@ -111,6 +113,15 @@ public class CellButton extends JButton {
 
     public void clearHighlightedNote() {
         this.highlightedNote = 0;
+    }
+
+    public void setNoteColor(Color noteColor) {
+        this.noteColor = noteColor == null ? Color.DARK_GRAY : noteColor;
+    }
+
+    public void setHighlightedNoteColor(Color highlightedNoteColor) {
+        this.highlightedNoteColor =
+            highlightedNoteColor == null ? Color.BLUE : highlightedNoteColor;
     }
 
     public void clearMainValue() {
@@ -193,7 +204,7 @@ public class CellButton extends JButton {
             g2.setFont(font);
 
             FontMetrics fm = g2.getFontMetrics();
-            g2.setColor(highlighted ? Color.BLUE : Color.DARK_GRAY);
+            g2.setColor(highlighted ? highlightedNoteColor : noteColor);
 
             String s = String.valueOf(n);
 

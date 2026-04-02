@@ -3,6 +3,7 @@ package gamehub.snake.view;
 import javax.swing.*;
 import java.awt.*;
 
+import gamehub.view.ViewportWidthPanel;
 import gamehub.snake.model.SnakeBoardSize;
 import gamehub.snake.model.SnakeGameRecord;
 import gamehub.snake.model.SnakeTheme;
@@ -12,6 +13,8 @@ import gamehub.snake.model.SnakeStyleSetting;
 public class SnakeHomePanel extends JPanel {
     private final SnakeStyleSetting styleSettings;
     private final SnakeGameRecord record;
+    private final JPanel content;
+    private final JScrollPane scrollPane;
     private final JPanel card;
     private final JLabel titleLabel;
     // private final JLabel subtitleLabel;
@@ -22,14 +25,17 @@ public class SnakeHomePanel extends JPanel {
     private final JButton customizeButton;
 
     public SnakeHomePanel(SnakeStyleSetting styleSettings, SnakeGameRecord record) {
-        super(new GridBagLayout());
+        super(new BorderLayout());
         this.styleSettings = styleSettings;
         this.record = record;
         setBorder(
             BorderFactory.createEmptyBorder(
-                40, 40, 40, 40
+                20, 20, 20, 20
             )
         );
+
+        content = new ViewportWidthPanel(new GridBagLayout());
+        content.setOpaque(false);
 
         card = new JPanel() {
             @Override
@@ -143,14 +149,30 @@ public class SnakeHomePanel extends JPanel {
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.anchor = GridBagConstraints.CENTER;
+        gbc.weightx = 1.0;
+        gbc.weighty = 1.0;
+        gbc.fill = GridBagConstraints.NONE;
+        gbc.insets = new Insets(10, 10, 10, 10);
 
-        add(card, gbc);
+        content.add(card, gbc);
+
+        scrollPane = new JScrollPane(
+            content,
+            ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
+            ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER
+        );
+        scrollPane.setBorder(BorderFactory.createEmptyBorder());
+        scrollPane.getVerticalScrollBar().setUnitIncrement(16);
+
+        add(scrollPane, BorderLayout.CENTER);
         refreshTheme();
     }
 
     public void refreshTheme() {
         SnakeTheme theme = styleSettings.getTheme();
         setBackground(theme.getBackground());
+        content.setBackground(theme.getBackground());
+        scrollPane.getViewport().setBackground(theme.getBackground());
 
         titleLabel.setForeground(theme.getAccent());
         // subtitleLabel.setForeground(theme.getText());
