@@ -58,10 +58,11 @@ public final class SudokuRules {
      * @return {@code true} if a duplicate exists in the row or column
      */
     private static boolean checkRowColumnDuplicate(
-            int[][] grid,
-            int row,
-            int col,
-            int val) {
+        int[][] grid,
+        int row,
+        int col,
+        int val
+    ) {
         int size = grid.length;
 
         // check row
@@ -99,11 +100,12 @@ public final class SudokuRules {
      * @return {@code true} if a duplicate exists in the box
      */
     private static boolean checkBoxDuplicate(
-            int[][] grid,
-            int row,
-            int col,
-            int val,
-            int boxSize) {
+        int[][] grid,
+        int row,
+        int col,
+        int val,
+        int boxSize
+    ) {
         int rowStart = (row / boxSize) * boxSize;
         int colStart = (col / boxSize) * boxSize;
 
@@ -133,11 +135,12 @@ public final class SudokuRules {
      * @return {@code true} if the placement is invalid, {@code false} otherwise
      */
     public static boolean checkDuplicate(
-            int[][] grid,
-            int row,
-            int col,
-            int val,
-            int boxSize) {
+        int[][] grid,
+        int row,
+        int col,
+        int val,
+        int boxSize
+    ) {
         return checkRowColumnDuplicate(grid, row, col, val)
                 || checkBoxDuplicate(grid, row, col, val, boxSize);
     }
