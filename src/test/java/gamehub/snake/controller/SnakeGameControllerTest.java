@@ -18,7 +18,7 @@ import gamehub.snake.model.Direction;
 import gamehub.snake.model.GameState;
 import gamehub.snake.model.Snake;
 
-public class SankeGameControllerTest {
+public class SnakeGameControllerTest {
     private final List<SnakeGameController> controllers = new ArrayList<>();
 
     @Before
