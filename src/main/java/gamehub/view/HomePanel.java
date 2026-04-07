@@ -20,8 +20,10 @@ import gamehub.model.AppTheme;
 import gamehub.model.HomeTheme;
 
 /**
- * Root home page for Game Hub.
- * Lets users choose between Snake and Sudoku.
+ * Home screen for top-level Game Hub navigation.
+ *
+ * <p>This panel presents entry actions for Snake and Sudoku, and exposes
+ * callbacks so the hosting frame can handle navigation and app-theme updates.</p>
  */
 public class HomePanel extends JPanel {
 
@@ -38,6 +40,9 @@ public class HomePanel extends JPanel {
     private Runnable onSudoku = () -> {};
     private Consumer<AppTheme> onThemeChanged = theme -> {};
 
+    /**
+     * Builds the home UI card, wires button actions, and applies default theme.
+     */
     public HomePanel() {
         super(new GridBagLayout());
 
@@ -79,18 +84,39 @@ public class HomePanel extends JPanel {
         applyTheme(AppTheme.LIGHT);
     }
 
+    /**
+     * Sets callback for the Snake entry button.
+     *
+     * @param onSnake callback invoked when user clicks "Play Snake"
+     */
     public void setOnSnake(Runnable onSnake) {
         this.onSnake = onSnake == null ? () -> {} : onSnake;
     }
 
+    /**
+     * Sets callback for the Sudoku entry button.
+     *
+     * @param onSudoku callback invoked when user clicks "Play Sudoku"
+     */
     public void setOnSudoku(Runnable onSudoku) {
         this.onSudoku = onSudoku == null ? () -> {} : onSudoku;
     }
 
+    /**
+     * Sets callback fired after the panel switches between light/dark themes.
+     *
+     * @param onThemeChanged consumer receiving the newly applied theme
+     */
     public void setOnThemeChanged(Consumer<AppTheme> onThemeChanged) {
         this.onThemeChanged = onThemeChanged == null ? theme -> {} : onThemeChanged;
     }
 
+    /**
+     * Applies the selected app theme to the page background, card, labels,
+     * and action controls.
+     *
+     * @param theme target theme; ignored when {@code null}
+     */
     public void applyTheme(AppTheme theme) {
         if (theme == null) {
             return;
@@ -126,6 +152,9 @@ public class HomePanel extends JPanel {
         repaint();
     }
 
+    /**
+     * Creates the center card container that hosts title, subtitle, and actions.
+     */
     private JPanel buildCard() {
         JPanel card = new JPanel();
         card.setLayout(new BoxLayout(card, BoxLayout.Y_AXIS));
@@ -140,6 +169,7 @@ public class HomePanel extends JPanel {
         return card;
     }
 
+    /** Creates the main page title label. */
     private JLabel createTitleLabel() {
         JLabel title = new JLabel("Game Hub");
         title.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -147,6 +177,7 @@ public class HomePanel extends JPanel {
         return title;
     }
 
+    /** Creates the subtitle shown under the main title. */
     private JLabel createSubtitleLabel() {
         JLabel subtitle = new JLabel("Choose a game to start");
         subtitle.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -154,6 +185,7 @@ public class HomePanel extends JPanel {
         return subtitle;
     }
 
+    /** Binds button events to navigation and theme callbacks. */
     private void bindActions() {
         snakeBtn.addActionListener(e -> onSnake.run());
         sudokuBtn.addActionListener(e -> onSudoku.run());
@@ -166,6 +198,7 @@ public class HomePanel extends JPanel {
         });
     }
 
+    /** Applies shared base sizing and typography to action buttons. */
     private void styleButton(AbstractButton button) {
         button.setAlignmentX(Component.CENTER_ALIGNMENT);
         button.setFont(new Font("SansSerif", Font.PLAIN, 16));
@@ -174,6 +207,9 @@ public class HomePanel extends JPanel {
         button.setPreferredSize(new java.awt.Dimension(260, 40));
     }
 
+    /**
+     * Applies color and border styling for the current light/dark mode.
+     */
     private void styleActionButton(
         AbstractButton button,
         boolean dark,
