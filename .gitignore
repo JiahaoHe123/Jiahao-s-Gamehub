@@ -24,7 +24,3 @@ build/
 # ==== Logs / runtime temp ====
 *.log
 *.tmp
-
-# ==== Helper Classes ====
-src/main/java/gamehub/sudoku/Main.java
-src/main/java/gamehub/sudoku/view/Frame.java
