@@ -14,21 +14,41 @@ import java.util.Map;
 
 import gamehub.model.GameRecord;
 
+/**
+ * Persistent best-score store for Snake.
+ *
+ * <p>Tracks best scores per {@link SnakeDifficulty} and {@link SnakeBoardSize}
+ * combination using a simple text file, and supports migration from legacy
+ * key formats.</p>
+ */
 public class SnakeGameRecord extends GameRecord {
+    /** Default history file name under app data directory. */
     private static final String FILE_NAME = "Snake-history.txt";
 
+    /** In-memory record map keyed by {@code difficulty|boardSize}. */
     private final Map<String, Integer> record = new HashMap<>();
 
+    /**
+     * Creates a record store at the default history file location.
+     */
     public SnakeGameRecord() {
         this(getDefaultHistoryFile(FILE_NAME));
     }
 
+    /**
+     * Creates a record store using a specific file path.
+     *
+     * @param filePath path to the history file
+     */
     public SnakeGameRecord(Path filePath) {
         super(filePath);
         initializeDefaults();
         load();
     }
 
+    /**
+     * Persists all scores using atomic-write semantics when supported.
+     */
     @Override
     protected void save() {
         try {
@@ -68,6 +88,12 @@ public class SnakeGameRecord extends GameRecord {
         }
     }
 
+    /**
+     * Loads persisted scores, tolerating malformed/unknown lines.
+     *
+     * <p>When legacy keys are detected, values are migrated to canonical keys.
+     * For each key, the maximum observed value is retained.</p>
+     */
     @Override
     protected void load() {
         try {
@@ -109,10 +135,24 @@ public class SnakeGameRecord extends GameRecord {
         }
     }
 
+    /**
+     * Returns best score for a given difficulty and board size.
+     *
+     * @param d difficulty
+     * @param sb board size
+     * @return stored best score, or {@code 0} if no score exists
+     */
     public int getScore(SnakeDifficulty d, SnakeBoardSize sb) {
         return record.getOrDefault(keyGenerate(d, sb), 0);
     }
 
+    /**
+     * Records a score only if it exceeds the currently stored best score.
+     *
+     * @param d difficulty
+     * @param sb board size
+     * @param score candidate score
+     */
     public void recordScore(SnakeDifficulty d, SnakeBoardSize sb, int score) {
         String k = keyGenerate(d, sb);
         int current = record.getOrDefault(k, 0);
@@ -123,6 +163,7 @@ public class SnakeGameRecord extends GameRecord {
         save();
     }
 
+    /** Initializes all difficulty/board-size combinations to zero. */
     private void initializeDefaults() {
         for (SnakeDifficulty difficulty : SnakeDifficulty.values()) {
             for (SnakeBoardSize boardSize : SnakeBoardSize.values()) {
@@ -131,6 +172,12 @@ public class SnakeGameRecord extends GameRecord {
         }
     }
 
+    /**
+     * Converts a legacy key format to canonical storage format.
+     *
+     * @param key original key from file
+     * @return canonical key or {@code null} if unmatched
+     */
     private static String toCanonicalKey(String key) {
         for (SnakeDifficulty difficulty : SnakeDifficulty.values()) {
             for (SnakeBoardSize boardSize : SnakeBoardSize.values()) {
@@ -142,10 +189,16 @@ public class SnakeGameRecord extends GameRecord {
         return null;
     }
 
+    /**
+     * Builds canonical key format: {@code difficulty|boardSize}.
+     */
     private static String keyGenerate(SnakeDifficulty d, SnakeBoardSize sb) {
         return d.storageKey() + "|" + sb.storageKey();
     }
 
+    /**
+     * Builds legacy key format used by older versions.
+     */
     private static String legacyKeyGenerate(SnakeDifficulty d, SnakeBoardSize sb) {
         return "(" + d.displayName() + ", " + sb.displayName() + ")";
     }
