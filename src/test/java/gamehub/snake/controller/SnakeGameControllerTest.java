@@ -35,7 +35,8 @@ public class SnakeGameControllerTest {
 
     @Test
     public void constructorInitializesCoreFieldsAndFood() throws Exception {
-        SnakeGameController controller = newController(20, 15, 10, 3);
+        SnakeGameController controller =
+            newController(20, 15, 10, 3);
 
         assertEquals(20, controller.getBoardWidth());
         assertEquals(15, controller.getBoardHeight());
@@ -45,12 +46,16 @@ public class SnakeGameControllerTest {
         assertEquals(0, controller.getBestScore());
         assertEquals(GameState.COUNTDOWN, controller.getGameState());
         assertNotNull(controller.getFood());
-        assertFalse(controller.getSnake().body().contains(controller.getFood()));
+        assertFalse(
+            controller.getSnake().body().contains(controller.getFood())
+        );
     }
 
     @Test
-    public void startNewGameWithCountdownResetsScoreAndReturnsToCountdown() throws Exception {
-        SnakeGameController controller = newController(20, 15, 10, 3);
+    public void startNewGameWithCountdownResetsScoreAndReturnsToCountdown()
+        throws Exception {
+        SnakeGameController controller =
+            newController(20, 15, 10, 3);
 
         setField(controller, "score", 7);
         setField(controller, "gameState", GameState.GAME_OVER);
@@ -63,8 +68,10 @@ public class SnakeGameControllerTest {
     }
 
     @Test
-    public void restartIfGameOverOnlyRestartsWhenStateIsGameOver() throws Exception {
-        SnakeGameController controller = newController(20, 15, 10, 3);
+    public void restartIfGameOverOnlyRestartsWhenStateIsGameOver()
+        throws Exception {
+        SnakeGameController controller =
+            newController(20, 15, 10, 3);
 
         setField(controller, "gameState", GameState.PLAYING);
         setField(controller, "score", 4);
@@ -80,19 +87,27 @@ public class SnakeGameControllerTest {
     }
 
     @Test
-    public void queueDirectionUpdatesSnakePendingDirectionWithRules() throws Exception {
-        SnakeGameController controller = newController(20, 15, 10, 3);
+    public void queueDirectionUpdatesSnakePendingDirectionWithRules()
+        throws Exception {
+        SnakeGameController controller =
+            newController(20, 15, 10, 3);
 
         controller.queueDirection(Direction.LEFT);
-        assertEquals(Direction.RIGHT, controller.getSnake().getPendingDirection());
+        assertEquals(
+            Direction.RIGHT, controller.getSnake().getPendingDirection()
+        );
 
         controller.queueDirection(Direction.DOWN);
-        assertEquals(Direction.DOWN, controller.getSnake().getPendingDirection());
+        assertEquals(
+            Direction.DOWN, controller.getSnake().getPendingDirection()
+        );
     }
 
     @Test
-    public void updateGameMovesFromCountdownToPlayingWhenTimeExpires() throws Exception {
-        SnakeGameController controller = newController(20, 15, 10, 1);
+    public void updateGameMovesFromCountdownToPlayingWhenTimeExpires()
+        throws Exception {
+        SnakeGameController controller =
+            newController(20, 15, 10, 1);
 
         setField(controller, "gameState", GameState.COUNTDOWN);
         setField(
@@ -108,7 +123,8 @@ public class SnakeGameControllerTest {
 
     @Test
     public void updateGameSetsGameOverOnWallCollision() throws Exception {
-        SnakeGameController controller = newController(3, 3, 10, 1);
+        SnakeGameController controller =
+            newController(3, 3, 10, 1);
 
         Snake snake = controller.getSnake();
         snake.reset(2, 1);
@@ -120,8 +136,10 @@ public class SnakeGameControllerTest {
     }
 
     @Test
-    public void updateGameEatingFoodIncrementsScoreAndBestScore() throws Exception {
-        SnakeGameController controller = newController(20, 20, 10, 1);
+    public void updateGameEatingFoodIncrementsScoreAndBestScore()
+        throws Exception {
+        SnakeGameController controller =
+            newController(20, 20, 10, 1);
 
         Snake snake = controller.getSnake();
         Point head = snake.head();
@@ -158,14 +176,18 @@ public class SnakeGameControllerTest {
         return controller;
     }
 
-    private static void invokeUpdateGame(SnakeGameController controller) throws Exception {
-        Method method = SnakeGameController.class.getDeclaredMethod("updateGame");
+    private static void invokeUpdateGame(SnakeGameController controller)
+        throws Exception {
+        Method method =
+            SnakeGameController.class.getDeclaredMethod("updateGame");
         method.setAccessible(true);
         method.invoke(controller);
     }
 
-    private static void stopTimer(SnakeGameController controller) throws Exception {
-        Field timerField = SnakeGameController.class.getDeclaredField("timer");
+    private static void stopTimer(SnakeGameController controller)
+        throws Exception {
+        Field timerField =
+            SnakeGameController.class.getDeclaredField("timer");
         timerField.setAccessible(true);
         Timer timer = (Timer) timerField.get(controller);
         if (timer != null) {

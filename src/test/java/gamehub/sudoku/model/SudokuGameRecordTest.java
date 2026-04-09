@@ -15,7 +15,8 @@ import org.junit.Test;
 public class SudokuGameRecordTest {
 
     @Test
-    public void constructorCreatesMissingHistoryFileWithZeroDefaults() throws IOException {
+    public void constructorCreatesMissingHistoryFileWithZeroDefaults()
+        throws IOException {
         Path dir = Files.createTempDirectory("sudoku-record-test");
         Path file = dir.resolve("Sudoku-history.txt");
 
@@ -107,7 +108,11 @@ public class SudokuGameRecordTest {
         record.recordWin(SudokuDifficulty.MEDIUM);
         record.recordLoss(SudokuDifficulty.MEDIUM);
 
-        assertEquals(66.66666666666667, record.getWinRate(SudokuDifficulty.MEDIUM), 0.0000001);
+        assertEquals(
+            66.66666666666667,
+            record.getWinRate(SudokuDifficulty.MEDIUM),
+            0.0000001
+        );
         assertEquals(0.0, record.getWinRate(SudokuDifficulty.EASY), 0.0);
     }
 
@@ -123,8 +128,12 @@ public class SudokuGameRecordTest {
 
         Map<SudokuDifficulty, int[]> snapshot = record.snapshotWL();
 
-        assertArrayEquals(new int[] {1, 1}, snapshot.get(SudokuDifficulty.EASY));
-        assertArrayEquals(new int[] {1, 0}, snapshot.get(SudokuDifficulty.HARD));
+        assertArrayEquals(
+            new int[] {1, 1}, snapshot.get(SudokuDifficulty.EASY)
+        );
+        assertArrayEquals(
+            new int[] {1, 0}, snapshot.get(SudokuDifficulty.HARD)
+        );
 
         record.resetAll();
         for (SudokuDifficulty difficulty : SudokuDifficulty.values()) {

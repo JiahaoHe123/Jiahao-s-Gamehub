@@ -30,7 +30,8 @@ public class SudokuGameControllerTest {
         );
         TestBoardPanel panel = new TestBoardPanel(board);
 
-        SudokuGameController controller = new SudokuGameController(board, panel);
+        SudokuGameController controller =
+            new SudokuGameController(board, panel);
 
         assertTrue(panel.controllerSet);
 
@@ -41,10 +42,16 @@ public class SudokuGameControllerTest {
 
     @Test
     public void toggleNoteModeByShortcutTogglesPanelAndNotifiesListener() {
-        StubSudokuBoard board = stubBoard(zeroBoard(), solutionWithFirstValue(1), 81, false);
+        StubSudokuBoard board = stubBoard(
+            zeroBoard(),
+            solutionWithFirstValue(1),
+            81,
+            false
+        );
         TestBoardPanel panel = new TestBoardPanel(board);
 
-        SudokuGameController controller = new SudokuGameController(board, panel);
+        SudokuGameController controller =
+            new SudokuGameController(board, panel);
         AtomicInteger callbackCount = new AtomicInteger(0);
         List<Boolean> states = new ArrayList<>();
         controller.setOnNoteModeChanged(on -> {
@@ -63,11 +70,17 @@ public class SudokuGameControllerTest {
 
     @Test
     public void handleKeyTypedInNoteModeTogglesNotesAndRefreshesHighlights() {
-        StubSudokuBoard board = stubBoard(zeroBoard(), solutionWithFirstValue(1), 81, false);
+        StubSudokuBoard board = stubBoard(
+            zeroBoard(),
+            solutionWithFirstValue(1),
+            81,
+            false
+        );
         TestBoardPanel panel = new TestBoardPanel(board);
         panel.setNoteMode(true);
 
-        SudokuGameController controller = new SudokuGameController(board, panel);
+        SudokuGameController controller =
+            new SudokuGameController(board, panel);
 
         CellButton button = new CellButton("");
         button.setGridPosition(0, 0);
@@ -80,10 +93,16 @@ public class SudokuGameControllerTest {
 
     @Test
     public void handleKeyTypedReturnsImmediatelyForFixedCell() {
-        StubSudokuBoard board = stubBoard(zeroBoard(), solutionWithFirstValue(1), 81, false);
+        StubSudokuBoard board = stubBoard(
+            zeroBoard(),
+            solutionWithFirstValue(1),
+            81,
+            false
+        );
         TestBoardPanel panel = new TestBoardPanel(board);
 
-        SudokuGameController controller = new SudokuGameController(board, panel);
+        SudokuGameController controller =
+            new SudokuGameController(board, panel);
 
         CellButton fixedButton = new CellButton("");
         fixedButton.setGridPosition(0, 0);
@@ -99,11 +118,17 @@ public class SudokuGameControllerTest {
 
     @Test
     public void handleKeyTypedCorrectAnswerUpdatesCountsAndTriggersWin() {
-        StubSudokuBoard board = stubBoard(zeroBoard(), solutionWithFirstValue(5), 1, false);
+        StubSudokuBoard board = stubBoard(
+            zeroBoard(),
+            solutionWithFirstValue(5),
+            1,
+            false
+        );
         TestBoardPanel panel = new TestBoardPanel(board);
         panel.setNoteMode(false);
 
-        SudokuGameController controller = new SudokuGameController(board, panel);
+        SudokuGameController controller =
+            new SudokuGameController(board, panel);
 
         AtomicInteger countChanged = new AtomicInteger(0);
         AtomicInteger wins = new AtomicInteger(0);
@@ -126,11 +151,17 @@ public class SudokuGameControllerTest {
 
     @Test
     public void wrongAnswersDecreaseAttemptsAndTriggerLoseAtTolerance() {
-        StubSudokuBoard board = stubBoard(zeroBoard(), solutionWithFirstValue(1), 81, false);
+        StubSudokuBoard board = stubBoard(
+            zeroBoard(),
+            solutionWithFirstValue(1),
+            81,
+            false
+        );
         TestBoardPanel panel = new TestBoardPanel(board);
         panel.setNoteMode(false);
 
-        SudokuGameController controller = new SudokuGameController(board, panel);
+        SudokuGameController controller =
+            new SudokuGameController(board, panel);
 
         AtomicInteger attemptsChanged = new AtomicInteger(0);
         AtomicInteger loses = new AtomicInteger(0);
@@ -152,10 +183,16 @@ public class SudokuGameControllerTest {
 
     @Test
     public void checkWholeBoardHandlesIncompleteWrongAndWinPaths() {
-        StubSudokuBoard board = stubBoard(zeroBoard(), solutionWithFirstValue(1), 81, true);
+        StubSudokuBoard board = stubBoard(
+            zeroBoard(),
+            solutionWithFirstValue(1),
+            81,
+            true
+        );
         TestBoardPanel panel = new TestBoardPanel(board);
 
-        SudokuGameController controller = new SudokuGameController(board, panel);
+        SudokuGameController controller =
+            new SudokuGameController(board, panel);
 
         panel.currentSolutionForTest = null;
         assertFalse(controller.checkWholeBoard());
@@ -172,11 +209,17 @@ public class SudokuGameControllerTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void checkWholeBoardThrowsWhenAnswerLengthIsInvalid() {
-        StubSudokuBoard board = stubBoard(zeroBoard(), solutionWithFirstValue(1), 81, false);
+        StubSudokuBoard board = stubBoard(
+            zeroBoard(),
+            solutionWithFirstValue(1),
+            81,
+            false
+        );
         TestBoardPanel panel = new TestBoardPanel(board);
         panel.currentSolutionForTest = new int[80];
 
-        SudokuGameController controller = new SudokuGameController(board, panel);
+        SudokuGameController controller =
+            new SudokuGameController(board, panel);
         controller.checkWholeBoard();
     }
 

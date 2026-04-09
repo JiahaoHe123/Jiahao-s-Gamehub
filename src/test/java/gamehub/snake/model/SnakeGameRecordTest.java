@@ -12,7 +12,8 @@ import org.junit.Test;
 
 public class SnakeGameRecordTest {
     @Test
-    public void constructorCreatesMissingHistoryFileWithZeroDefaults() throws IOException {
+    public void constructorCreatesMissingHistoryFileWithZeroDefaults()
+        throws IOException {
         Path dir = Files.createTempDirectory("snake-record-test");
         Path file = dir.resolve("Snake-history.txt");
 
@@ -20,7 +21,9 @@ public class SnakeGameRecordTest {
 
         for (SnakeDifficulty difficulty : SnakeDifficulty.values()) {
             for (SnakeBoardSize boardSize : SnakeBoardSize.values()) {
-                assertEquals(0, record.getScore(difficulty, boardSize));
+                assertEquals(
+                    0, record.getScore(difficulty, boardSize)
+                );
             }
         }
     }
@@ -31,15 +34,30 @@ public class SnakeGameRecordTest {
         Path file = dir.resolve("Snake-history.txt");
 
         SnakeGameRecord first = new SnakeGameRecord(file);
-        first.recordScore(SnakeDifficulty.EASY, SnakeBoardSize.LARGE, 20);
-        first.recordScore(SnakeDifficulty.NIGHTMARE, SnakeBoardSize.MEDIUM, 5);
-        first.recordScore(SnakeDifficulty.IMPOSSIBLE, SnakeBoardSize.SMALL, 10);
+        first.recordScore(
+            SnakeDifficulty.EASY, SnakeBoardSize.LARGE, 20
+        );
+        first.recordScore(
+            SnakeDifficulty.NIGHTMARE, SnakeBoardSize.MEDIUM, 5
+        );
+        first.recordScore(
+            SnakeDifficulty.IMPOSSIBLE, SnakeBoardSize.SMALL, 10
+        );
 
         SnakeGameRecord second = new SnakeGameRecord(file);
 
-        assertEquals(20, second.getScore(SnakeDifficulty.EASY, SnakeBoardSize.LARGE));
-        assertEquals(5, second.getScore(SnakeDifficulty.NIGHTMARE, SnakeBoardSize.MEDIUM));
-        assertEquals(10, second.getScore(SnakeDifficulty.IMPOSSIBLE, SnakeBoardSize.SMALL));
+        assertEquals(
+            20,
+            second.getScore(SnakeDifficulty.EASY, SnakeBoardSize.LARGE)
+        );
+        assertEquals(
+            5,
+            second.getScore(SnakeDifficulty.NIGHTMARE, SnakeBoardSize.MEDIUM)
+        );
+        assertEquals(
+            10,
+            second.getScore(SnakeDifficulty.IMPOSSIBLE, SnakeBoardSize.SMALL)
+        );
     }
 
     @Test
@@ -60,9 +78,21 @@ public class SnakeGameRecordTest {
 
         SnakeGameRecord record = new SnakeGameRecord(file);
 
-        assertEquals(22, record.getScore(SnakeDifficulty.EASY, SnakeBoardSize.SMALL));
-        assertEquals(0, record.getScore(SnakeDifficulty.EASY, SnakeBoardSize.MEDIUM));
-        assertEquals(0, record.getScore(SnakeDifficulty.EASY, SnakeBoardSize.LARGE));
-        assertEquals(30, record.getScore(SnakeDifficulty.MEDIUM, SnakeBoardSize.SMALL));
+        assertEquals(
+            22,
+            record.getScore(SnakeDifficulty.EASY, SnakeBoardSize.SMALL)
+        );
+        assertEquals(
+            0,
+            record.getScore(SnakeDifficulty.EASY, SnakeBoardSize.MEDIUM)
+        );
+        assertEquals(
+            0,
+            record.getScore(SnakeDifficulty.EASY, SnakeBoardSize.LARGE)
+        );
+        assertEquals(
+            30,
+            record.getScore(SnakeDifficulty.MEDIUM, SnakeBoardSize.SMALL)
+        );
     }
 }

@@ -38,7 +38,9 @@ public class SudokuBoardTest {
         }
 
         assertEquals(board.numOfEmptyCells(), zeros);
-        assertTrue(board.numOfEmptyCells() <= SudokuDifficulty.MEDIUM.emptyCells());
+        assertTrue(
+            board.numOfEmptyCells() <= SudokuDifficulty.MEDIUM.emptyCells()
+        );
     }
 
     @Test
