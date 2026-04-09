@@ -9,6 +9,12 @@ import gamehub.snake.model.SnakeStyleSetting;
 
 import java.awt.*;
 
+/**
+ * Customization page for Snake visual style and gameplay options.
+ *
+ * <p>Allows users to configure render mode, pattern, color preset, theme,
+ * difficulty, and board size, then save changes back to shared settings.</p>
+ */
 public class StyleCustomizationPanel extends JPanel {
     private static final Color BACKGROUND = new Color(12, 18, 12);
     private static final Color CARD_BACKGROUND = new Color(18, 28, 18);
@@ -41,6 +47,11 @@ public class StyleCustomizationPanel extends JPanel {
 
     private Runnable onBackRequested = () -> {};
 
+    /**
+     * Creates the customization page UI and binds all interactions.
+     *
+     * @param styleSettings shared mutable settings object
+     */
     public StyleCustomizationPanel(SnakeStyleSetting styleSettings) {
         this.styleSettings = styleSettings;
 
@@ -311,11 +322,15 @@ public class StyleCustomizationPanel extends JPanel {
         refreshTheme();
     }
 
+    /** Sets callback invoked by both Back actions. */
     public void setOnBackRequested(Runnable onBackRequested) {
         this.onBackRequested =
             onBackRequested == null ? () -> {} : onBackRequested;
     }
 
+    /**
+     * Enables/disables local theme editing when theme is controlled by parent.
+     */
     public void setThemeManagedExternally(boolean themeManagedExternally) {
         this.themeManagedExternally = themeManagedExternally;
         themeCombo.setEnabled(!themeManagedExternally);
@@ -327,6 +342,7 @@ public class StyleCustomizationPanel extends JPanel {
         }
     }
 
+    /** Syncs all controls from current settings values. */
     public void syncFromSettings() {
         if (
             styleSettings.getRenderMode() ==
@@ -352,6 +368,7 @@ public class StyleCustomizationPanel extends JPanel {
         refreshTheme();
     }
 
+    /** Applies current theme colors to customization controls. */
     public void refreshTheme() {
         SnakeTheme theme = styleSettings.getTheme();
 
@@ -401,6 +418,7 @@ public class StyleCustomizationPanel extends JPanel {
         repaint();
     }
 
+    /** Creates a styled radio option used in render-mode section. */
     private JRadioButton createRadio(String text) {
         JRadioButton radio = new JRadioButton(text);
         radio.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -410,6 +428,7 @@ public class StyleCustomizationPanel extends JPanel {
         return radio;
     }
 
+    /** Applies shared visual style for action buttons. */
     private void styleButton(JButton button) {
         button.setFocusable(false);
         button.setForeground(BACKGROUND);
@@ -420,6 +439,7 @@ public class StyleCustomizationPanel extends JPanel {
         button.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
     }
 
+    /** Applies current UI selections into shared settings object. */
     private void applySelection() {
         if (blocksOption.isSelected()) {
             styleSettings.setRenderMode(SnakeStyleSetting.RenderMode.BLOCKS);
@@ -451,6 +471,7 @@ public class StyleCustomizationPanel extends JPanel {
         }
     }
 
+    /** Updates style and color previews shown in the panel. */
     private void refreshPreview() {
         String preview;
         if (blocksOption.isSelected()) {
@@ -479,6 +500,7 @@ public class StyleCustomizationPanel extends JPanel {
         colorPreviewLabel.setForeground(styleSettings.getTheme().getText());
     }
 
+    /** Converts color to HTML hex string for preview label markup. */
     private String toHex(Color color) {
         return String.format(
             "#%02X%02X%02X",
@@ -488,6 +510,7 @@ public class StyleCustomizationPanel extends JPanel {
         );
     }
 
+    /** Repeats a text pattern N times for preview generation. */
     private String repeatPattern(String pattern, int repeats) {
         if (pattern == null || pattern.trim().isEmpty()) {
             pattern = "<>";
@@ -500,9 +523,13 @@ public class StyleCustomizationPanel extends JPanel {
         return builder.toString();
     }
 
+    /**
+     * Local scrollable panel that tracks viewport width for better form layout.
+     */
     private static class ViewportWidthPanel
         extends JPanel implements Scrollable {
 
+        /** Creates a viewport-aware panel with supplied layout. */
         ViewportWidthPanel(LayoutManager layout) {
             super(layout);
         }

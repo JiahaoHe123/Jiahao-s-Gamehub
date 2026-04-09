@@ -24,6 +24,12 @@ import gamehub.snake.model.SnakeStyleSetting;
 import gamehub.snake.model.SnakeTheme;
 import gamehub.view.ViewportWidthPanel;
 
+/**
+ * Record/history page for Snake high scores.
+ *
+ * <p>Displays overall best score plus a difficulty-by-board-size table and
+ * exposes a back callback for navigation.</p>
+ */
 public class SnakeRecordView extends JPanel {
     private final SnakeStyleSetting styleSetting;
     private final SnakeGameRecord record;
@@ -37,6 +43,12 @@ public class SnakeRecordView extends JPanel {
 
     private Runnable onBackRequested = () -> {};
 
+    /**
+     * Creates the Snake records view.
+     *
+     * @param styleSetting shared style/theme settings
+     * @param record record provider for persisted scores
+     */
     public SnakeRecordView(SnakeStyleSetting styleSetting, SnakeGameRecord record) {
         super(new BorderLayout());
         this.styleSetting = styleSetting;
@@ -113,10 +125,16 @@ public class SnakeRecordView extends JPanel {
         refreshTheme();
     }
 
+    /**
+     * Sets callback used when user presses Back.
+     *
+     * @param onBackRequested callback for returning to previous page
+     */
     public void setOnBackRequested(Runnable onBackRequested) {
         this.onBackRequested = onBackRequested == null ? () -> {} : onBackRequested;
     }
 
+    /** Rebuilds the score table and overall best display from record data. */
     public void refreshRecords() {
         SnakeTheme theme = styleSetting.getTheme();
         String primaryText = toHex(theme.getText());
@@ -172,6 +190,7 @@ public class SnakeRecordView extends JPanel {
         );
     }
 
+    /** Converts RGB color to HTML hex string used in label markup. */
     private String toHex(java.awt.Color color) {
         return String.format(
             "#%02X%02X%02X",
@@ -181,6 +200,7 @@ public class SnakeRecordView extends JPanel {
         );
     }
 
+    /** Applies current theme colors to all controls and containers. */
     public void refreshTheme() {
         SnakeTheme theme = styleSetting.getTheme();
 

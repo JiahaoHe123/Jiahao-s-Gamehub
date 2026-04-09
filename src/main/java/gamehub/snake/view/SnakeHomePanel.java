@@ -10,6 +10,12 @@ import gamehub.snake.model.SnakeTheme;
 import gamehub.snake.model.SnakeDifficulty;
 import gamehub.snake.model.SnakeStyleSetting;
 
+/**
+ * Home/landing page for the Snake module.
+ *
+ * <p>Shows quick actions (start/settings/records), current difficulty and
+ * board size, and both selected/overall best scores.</p>
+ */
 public class SnakeHomePanel extends JPanel {
     private final SnakeStyleSetting styleSettings;
     private final SnakeGameRecord record;
@@ -25,6 +31,12 @@ public class SnakeHomePanel extends JPanel {
     private final JButton customizeButton;
     private final JButton recordButton;
 
+    /**
+     * Creates the Snake home panel.
+     *
+     * @param styleSettings shared style/game settings
+     * @param record score record provider
+     */
     public SnakeHomePanel(SnakeStyleSetting styleSettings, SnakeGameRecord record) {
         super(new BorderLayout());
         this.styleSettings = styleSettings;
@@ -182,6 +194,10 @@ public class SnakeHomePanel extends JPanel {
         refreshTheme();
     }
 
+    /**
+     * Refreshes text, button, and background colors for current theme,
+     * and updates score/difficulty display values.
+     */
     public void refreshTheme() {
         SnakeTheme theme = styleSettings.getTheme();
         setBackground(theme.getBackground());
@@ -236,18 +252,22 @@ public class SnakeHomePanel extends JPanel {
         repaint();
     }
 
+    /** Returns label showing selected/overall best scores. */
     public JLabel getStatsLabel() {
         return statsLabel;
     }
 
+    /** Returns "Start Game" button for navigation wiring. */
     public JButton getStartButton() {
         return startButton;
     }
 
+    /** Returns settings button for navigation wiring. */
     public JButton getCustomizeButton() {
         return customizeButton;
     }
 
+    /** Returns records button for navigation wiring. */
     public JButton getRecordButton() {
         return recordButton;
     }

@@ -25,6 +25,13 @@ import gamehub.snake.model.SnakeDifficulty;
 import gamehub.snake.model.SnakeStyleSetting;
 import gamehub.snake.model.SnakeGameRecord;
 
+/**
+ * Main gameplay view for Snake.
+ *
+ * <p>This panel renders board, snake, food, HUD, and overlays (countdown/game over),
+ * binds keyboard controls, and coordinates with {@link SnakeGameController} for
+ * game state updates.</p>
+ */
 public class SnakeGamePanel extends JPanel {
     private static final int CELL_SIZE = 24;
     private static final int MIN_CELL_SIZE = 8;
@@ -42,6 +49,12 @@ public class SnakeGamePanel extends JPanel {
 
     private Runnable onHomepageRequested = () -> {};
 
+    /**
+     * Creates the Snake gameplay panel with styling and record dependencies.
+     *
+     * @param styleSettings mutable style/gameplay settings
+     * @param record persistent score record store
+     */
     public SnakeGamePanel(SnakeStyleSetting styleSettings, SnakeGameRecord record) {
         this.styleSettings = styleSettings;
         this.record = record;
@@ -73,21 +86,31 @@ public class SnakeGamePanel extends JPanel {
         refreshTheme();
     }
 
+    /**
+     * Sets callback for homepage navigation from HUD button.
+     *
+     * @param onHomepageRequested callback invoked when homepage is requested
+     */
     public void setOnHomePanelRequested(Runnable onHomepageRequested) {
         this.onHomepageRequested =
             onHomepageRequested == null ? () -> {} : onHomepageRequested;
     }
 
+    /**
+     * Starts a new game sequence with countdown using current settings.
+     */
     public void startNewGameWithCountdown() {
         ensureControllerMatchesSettings();
         controller.startNewGameWithCountdown();
         lastObservedGameState = controller.getGameState();
     }
 
+    /** Returns the active game controller instance. */
     public SnakeGameController getController() {
         return controller;
     }
 
+    /** Creates a HUD button with shared interaction styling. */
     private JButton createHudButton(String text) {
         JButton button = new JButton(text);
         button.setFocusable(false);
@@ -96,6 +119,7 @@ public class SnakeGamePanel extends JPanel {
         return button;
     }
 
+    /** Creates a game controller for selected board size and difficulty. */
     private SnakeGameController createController(
         SnakeBoardSize boardSize,
         SnakeDifficulty difficulty
@@ -109,6 +133,9 @@ public class SnakeGamePanel extends JPanel {
         );
     }
 
+    /**
+     * Recreates controller if board size or difficulty changed in settings.
+     */
     private void ensureControllerMatchesSettings() {
         SnakeBoardSize selectedBoardSize = styleSettings.getBoardSize();
         SnakeDifficulty selectedDifficulty = styleSettings.getDifficulty();
@@ -138,6 +165,7 @@ public class SnakeGamePanel extends JPanel {
         return controller.getBoardHeight();
     }
 
+    /** Refreshes panel and HUD button colors from current theme. */
     public void refreshTheme() {
         SnakeTheme theme = styleSettings.getTheme();
         setBackground(theme.getBackground());
@@ -149,6 +177,7 @@ public class SnakeGamePanel extends JPanel {
         repaint();
     }
 
+    /** Binds gameplay controls (movement/restart) to keyboard actions. */
     private void setupInputBindings() {
         bind("UP", () -> controller.queueDirection(Direction.UP));
         bind("W", () -> controller.queueDirection(Direction.UP));
@@ -162,6 +191,7 @@ public class SnakeGamePanel extends JPanel {
         bind("ENTER", controller::restartIfGameOver);
     }
 
+    /** Registers a single key binding mapped to a runnable action. */
     private void bind(String key, Runnable action) {
         String name = "key_" + key;
         getInputMap(WHEN_IN_FOCUSED_WINDOW)
@@ -174,6 +204,10 @@ public class SnakeGamePanel extends JPanel {
         });
     }
 
+    /**
+     * Paint entry point: computes responsive layout, draws board/HUD/effects,
+     * and records score transitions when game ends.
+     */
     @Override
     protected void paintComponent(Graphics graphics) {
         super.paintComponent(graphics);
@@ -273,6 +307,9 @@ public class SnakeGamePanel extends JPanel {
         g2.dispose();
     }
 
+    /**
+     * Records score exactly once when state transitions into GAME_OVER.
+     */
     private void recordScoreOnGameOverTransition() {
         GameState currentState = controller.getGameState();
         if (
@@ -288,6 +325,7 @@ public class SnakeGamePanel extends JPanel {
         lastObservedGameState = currentState;
     }
 
+    /** Draws board grid lines using accent and regular grid colors. */
     private void drawGrid(
         Graphics2D g2,
         int boardOffsetX,
@@ -329,6 +367,7 @@ public class SnakeGamePanel extends JPanel {
         }
     }
 
+    /** Draws food as a themed filled circle. */
     private void drawFood(
         Graphics2D g2,
         int boardOffsetX,
@@ -351,6 +390,7 @@ public class SnakeGamePanel extends JPanel {
         );
     }
 
+    /** Draws snake in selected render mode (blocks or text pattern). */
     private void drawSnake(
         Graphics2D g2,
         int boardOffsetX,
@@ -384,6 +424,7 @@ public class SnakeGamePanel extends JPanel {
         }
     }
 
+    /** Draws snake segments as repeated glyphs from configured text pattern. */
     private void drawTextPatternSnake(
         Graphics2D g2,
         int boardOffsetX,
@@ -420,6 +461,7 @@ public class SnakeGamePanel extends JPanel {
         }
     }
 
+    /** Draws score, best score, controls hint text, and HUD background. */
     private void drawHud(
         Graphics2D g2,
         int boardOffsetX,
@@ -484,6 +526,7 @@ public class SnakeGamePanel extends JPanel {
         );
     }
 
+    /** Computes and applies homepage button bounds in HUD area. */
     private void layoutHudButtons(
         int boardOffsetX,
         int boardOffsetY,
@@ -518,6 +561,7 @@ public class SnakeGamePanel extends JPanel {
         return Math.max(28, (int) Math.round(hudHeight * 0.6));
     }
 
+    /** Draws pre-game countdown overlay on top of board. */
     private void drawCountdown(
         Graphics2D g2,
         int boardOffsetX,
@@ -555,6 +599,7 @@ public class SnakeGamePanel extends JPanel {
         g2.drawString(countdownText, textX, textY);
     }
 
+    /** Draws game-over overlay and restart hint text. */
     private void drawGameOver(
         Graphics2D g2,
         int boardOffsetX,

@@ -14,7 +14,10 @@ import gamehub.snake.model.SnakeStyleSetting;
 import gamehub.snake.model.SnakeGameRecord;
 
 /**
- * Root snake module panel that can be embedded in Game Hub.
+ * Root Snake module container embedded in the Game Hub frame.
+ *
+ * <p>Composes module pages (home, customization, game, records), owns
+ * module-level navigation, and applies app-theme mappings to Snake themes.</p>
  */
 public class SnakeModulePanel extends JPanel {
 
@@ -27,6 +30,11 @@ public class SnakeModulePanel extends JPanel {
     private final JPanel topBar;
     private final JButton backButton;
 
+    /**
+     * Creates the Snake module UI and wires top-level back navigation.
+     *
+     * @param onBackToHub callback invoked when "Back to Hub" is clicked
+     */
     public SnakeModulePanel(Runnable onBackToHub) {
         super(new BorderLayout());
 
@@ -64,11 +72,17 @@ public class SnakeModulePanel extends JPanel {
         applyTheme(AppTheme.LIGHT);
     }
 
+    /** Activates module by showing its home page and requesting focus. */
     public void activate() {
         navigationController.showHome();
         homePanel.requestFocusInWindow();
     }
 
+    /**
+     * Applies app theme to module theme and refreshes all child views.
+     *
+     * @param appTheme global theme selected in Game Hub
+     */
     public void applyTheme(AppTheme appTheme) {
         if (appTheme == null) {
             return;
