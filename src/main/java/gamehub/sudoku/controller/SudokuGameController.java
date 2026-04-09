@@ -86,7 +86,6 @@ public class SudokuGameController {
     public boolean checkWholeBoard() {
         int[] answer = boardPanel.getCurrentSolution();
         if (answer == null) {
-            boardPanel.showIncompleteBoardWarning();
             return false;
         }
 
@@ -98,12 +97,9 @@ public class SudokuGameController {
             int num = answer[i];
             boolean bad = boardModel.checkDuplicate(i / 9, i % 9, num);
             if (bad) {
-                boardPanel.showWrongAnswerMessage();
                 return false;
             }
         }
-
-        boardPanel.showWinMessage();
         return true;
     }
 

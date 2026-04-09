@@ -196,15 +196,15 @@ public class SudokuGameControllerTest {
 
         panel.currentSolutionForTest = null;
         assertFalse(controller.checkWholeBoard());
-        assertTrue(panel.incompleteShown);
+        assertFalse(panel.incompleteShown);
 
         panel.currentSolutionForTest = fullBoardOnes();
         assertFalse(controller.checkWholeBoard());
-        assertTrue(panel.wrongShown);
+        assertFalse(panel.wrongShown);
 
         board.duplicateResult = false;
         assertTrue(controller.checkWholeBoard());
-        assertTrue(panel.winShown);
+        assertFalse(panel.winShown);
     }
 
     @Test(expected = IllegalArgumentException.class)

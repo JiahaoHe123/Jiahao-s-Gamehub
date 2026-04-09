@@ -133,7 +133,18 @@ public class SudokuGamePanel extends JPanel {
         controlPanel.setHintRemaining(remainingHints);
 
         controlPanel.setOnCheck(() -> {
-            controller.checkWholeBoard();
+            int[] answer = boardPanel.getCurrentSolution();
+            if (answer == null) {
+                boardPanel.showIncompleteBoardWarning();
+                boardPanel.requestFocusInWindow();
+                return;
+            }
+
+            if (controller.checkWholeBoard()) {
+                boardPanel.showWinMessage();
+            } else {
+                boardPanel.showWrongAnswerMessage();
+            }
             boardPanel.requestFocusInWindow();
         });
 
