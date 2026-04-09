@@ -28,17 +28,30 @@ import java.awt.event.KeyEvent;
  */
 public class BoardPanel extends JPanel {
 
+    /** Sudoku board dimension (9x9). */
     public static final int SIZE = 9;
+    /** Sub-grid size (3x3); kept for view/controller consistency. */
     public static final int TOLERANCE = 3;
 
+    /** Shared style settings used for theme lookups. */
     private final SudokuStyleSetting styleSetting;
 
+    /** Grid of visible cell components. */
     private final CellButton[][] cells;
+    /** Currently selected cell, or {@code null} when nothing is selected. */
     private CellButton selectedButton;
 
+    /** Whether note entry mode is currently enabled. */
     private boolean notesMode = false;
+    /** Controller handling keyboard input and game validation logic. */
     private SudokuGameController controller;
 
+    /**
+     * Creates a themed Sudoku board view from a generated board model.
+     *
+     * @param boardModel generated Sudoku board values
+     * @param styleSetting shared style settings used for coloring
+     */
     public BoardPanel(SudokuBoard boardModel, SudokuStyleSetting styleSetting) {
         this.styleSetting = styleSetting;
         setFocusable(true);
@@ -50,32 +63,63 @@ public class BoardPanel extends JPanel {
         installKeyboardHandling();
     }
 
+    /**
+     * Injects the controller used by keyboard and action callbacks.
+     *
+     * @param controller active Sudoku controller
+     */
     public void setController(SudokuGameController controller) {
         this.controller = controller;
     }
 
+    /**
+     * Re-applies the current theme to board and cell visuals.
+     */
     public void refreshTheme() {
         setBackground(theme().getBoardBackground());
         applyCellColors();
         refreshHighlights();
     }
 
+    /**
+     * Returns the currently selected cell button.
+     *
+     * @return selected cell, or {@code null}
+     */
     public CellButton getSelectedButton() {
         return selectedButton;
     }
 
+    /**
+     * Returns the full 9x9 cell component matrix.
+     *
+     * @return board cell buttons
+     */
     public CellButton[][] getCells() {
         return cells;
     }
 
+    /**
+     * Enables or disables note mode at the view level.
+     *
+     * @param notesMode true to enable notes mode
+     */
     public void setNoteMode(boolean notesMode) {
         this.notesMode = notesMode;
     }
 
+    /**
+     * Indicates whether note mode is currently enabled.
+     *
+     * @return true if note mode is on
+     */
     public boolean isNoteMode() {
         return notesMode;
     }
 
+    /**
+     * Clears note visuals on every cell.
+     */
     public void refreshBoard() {
         for (int r = 0; r < SIZE; r++) {
             for (int c = 0; c < SIZE; c++) {
@@ -87,6 +131,12 @@ public class BoardPanel extends JPanel {
         }
     }
 
+    /**
+     * Reads the board as a flat row-major solution array.
+     *
+     * @return 81-value array, or {@code null} when at least one cell is blank
+     * @throws IllegalStateException if a cell contains non-numeric text
+     */
     public int[] getCurrentSolution() {
         int[] result = new int[SIZE * SIZE];
 
@@ -107,6 +157,9 @@ public class BoardPanel extends JPanel {
         return result;
     }
 
+    /**
+     * Shows a warning dialog when a board check is requested prematurely.
+     */
     public void showIncompleteBoardWarning() {
         JOptionPane.showMessageDialog(
             this,
@@ -116,6 +169,9 @@ public class BoardPanel extends JPanel {
         );
     }
 
+    /**
+     * Shows a dialog indicating the submitted answer is incorrect.
+     */
     public void showWrongAnswerMessage() {
         JOptionPane.showMessageDialog(
             this,
@@ -125,6 +181,9 @@ public class BoardPanel extends JPanel {
         );
     }
 
+    /**
+     * Shows a win dialog for a successfully solved board.
+     */
     public void showWinMessage() {
         JOptionPane.showMessageDialog(
             this,
@@ -134,29 +193,54 @@ public class BoardPanel extends JPanel {
         );
     }
 
+    /**
+     * Marks a cell as correct and locks it as fixed.
+     *
+     * @param button cell to mark
+     */
     public void markCellCorrect(CellButton button) {
         button.setBackground(theme().getCorrectCell());
         button.setCellState(CellButton.State.NORMAL);
         button.setFixed(true);
     }
 
+    /**
+     * Marks a cell as wrong using themed error styling.
+     *
+     * @param button cell to mark
+     */
     public void markCellWrong(CellButton button) {
         button.setCellState(CellButton.State.WRONG);
         button.setBackground(theme().getWrongCell());
     }
 
+    /**
+     * Clears a cell's main value and restores selected styling.
+     *
+     * @param button cell to clear
+     */
     public void clearCell(CellButton button) {
         button.setText("");
         button.setBackground(theme().getSelectedCell());
         button.setCellState(CellButton.State.NORMAL);
     }
 
+    /**
+     * Prepares a cell for note entry by clearing main text and resetting state.
+     *
+     * @param button target cell
+     */
     public void prepareCellForNotes(CellButton button) {
         button.setText("");
         button.setBackground(theme().getSelectedCell());
         button.setCellState(CellButton.State.NORMAL);
     }
 
+    /**
+     * Sets the selected cell and refreshes same-number highlighting.
+     *
+     * @param button newly selected cell
+     */
     public void setSelectedCell(CellButton button) {
         selectedButton = button;
         selectedButton.setBackground(theme().getSelectedCell());
@@ -165,11 +249,19 @@ public class BoardPanel extends JPanel {
         highlightSameNumbers(selectedButton.getText());
     }
 
+    /**
+     * Re-applies number matching highlights using current selection value.
+     */
     public void refreshHighlights() {
         String value = selectedButton == null ? "" : selectedButton.getText();
         highlightSameNumbers(value);
     }
 
+    /**
+     * Builds all cell components from the board model and wires selection actions.
+     *
+     * @param boardModel source board data
+     */
     private void buildCells(SudokuBoard boardModel) {
         int index = 0;
 
@@ -207,6 +299,9 @@ public class BoardPanel extends JPanel {
         }
     }
 
+    /**
+     * Installs keyboard forwarding to the bound game controller.
+     */
     private void installKeyboardHandling() {
         addKeyListener(new KeyAdapter() {
             @Override
@@ -229,6 +324,11 @@ public class BoardPanel extends JPanel {
         });
     }
 
+    /**
+     * Highlights cells sharing the selected number and note candidates.
+     *
+     * @param value selected cell text value
+     */
     private void highlightSameNumbers(String value) {
         applyCellColors();
 
@@ -275,6 +375,9 @@ public class BoardPanel extends JPanel {
         }
     }
 
+    /**
+     * Applies text and note colors to every cell from the active theme.
+     */
     private void applyCellColors() {
         SudokuTheme currentTheme = theme();
         for (int r = 0; r < SIZE; r++) {
@@ -287,6 +390,11 @@ public class BoardPanel extends JPanel {
         }
     }
 
+    /**
+     * Convenience accessor for the current Sudoku theme.
+     *
+     * @return active theme
+     */
     private SudokuTheme theme() {
         return styleSetting.getTheme();
     }

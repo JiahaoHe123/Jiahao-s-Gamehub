@@ -14,10 +14,12 @@ import java.awt.*;
  * <li>The remaining count for that digit</li>
  * <li>A checkmark (✓) when the count reaches zero</li>
  * </ul>
+ * </p>
  *
  * <p>
  * This component is updated dynamically by {@link BoardPanel}
  * whenever the player correctly fills a cell.
+ * </p>
  */
 public class NumberBar extends JPanel {
 
@@ -30,6 +32,7 @@ public class NumberBar extends JPanel {
      * <p>
      * The bar is laid out horizontally with 9 equally sized labels,
      * one for each digit from 1 to 9.
+    * </p>
      */
     public NumberBar() {
         setLayout(new GridLayout(1, 9));
@@ -49,9 +52,11 @@ public class NumberBar extends JPanel {
      * <p>
      * If a digit has no remaining placements, a checkmark (✓)
      * is appended and the label color changes to green.
+    * </p>
      *
      * @param remaining an array of length 9 where remaining[i] indicates
      *                  how many times digit (i + 1) can still be placed
+    * @throws ArrayIndexOutOfBoundsException if {@code remaining.length < 9}
      */
     public void setRemaining(int[] remaining) {
         for (int i = 0; i < 9; i++) {

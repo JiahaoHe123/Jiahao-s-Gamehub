@@ -20,18 +20,32 @@ import gamehub.sudoku.model.SudokuStyleSetting;
  */
 public class ControlPanel extends JPanel {
 
+    /** Navigates back to the Sudoku home screen. */
     private final JButton homeBtn = new JButton("Home");
+    /** Triggers full-board answer validation. */
     private final JButton checkBtn = new JButton("Check");
+    /** Clears all note candidates from the board. */
     private final JButton resetBtn = new JButton("Reset Notes");
+    /** Toggle for enabling/disabling note input mode. */
     private final JToggleButton notesModeBtn =
         new JToggleButton("Notes Mode: OFF");
 
+    /** Home button callback. */
     private Runnable onHome = () -> {};
+    /** Check button callback. */
     private Runnable onCheck = () -> {};
+    /** Reset notes button callback. */
     private Runnable onResetNotes = () -> {};
+    /** Notes-mode toggle callback receiving the new toggle state. */
     private java.util.function.Consumer<Boolean> onToggleNotes = on -> {};
+    /** Shared style settings used for theme refresh. */
     private final SudokuStyleSetting styleSetting;
 
+    /**
+     * Creates the bottom control bar and wires default callbacks.
+     *
+     * @param styleSetting shared style settings used for theming
+     */
     public ControlPanel(SudokuStyleSetting styleSetting) {
         this.styleSetting = styleSetting;
 
@@ -51,32 +65,61 @@ public class ControlPanel extends JPanel {
         });
     }
 
+    /**
+     * Sets the callback for the Home button.
+     *
+     * @param onHome callback to execute; no-op when {@code null}
+     */
     public void setOnHome(Runnable onHome) {
         this.onHome = onHome == null ? () -> {} : onHome;
     }
 
+    /**
+     * Sets the callback for the Check button.
+     *
+     * @param onCheck callback to execute; no-op when {@code null}
+     */
     public void setOnCheck(Runnable onCheck) {
         this.onCheck = onCheck == null ? () -> {} : onCheck;
     }
 
+    /**
+     * Sets the callback for the Reset Notes button.
+     *
+     * @param onResetNotes callback to execute; no-op when {@code null}
+     */
     public void setOnResetNotes(Runnable onResetNotes) {
         this.onResetNotes = onResetNotes == null ? () -> {} : onResetNotes;
     }
 
+    /**
+     * Sets the callback invoked when note mode is toggled.
+     *
+     * @param onToggleNotes receives selected state; no-op when {@code null}
+     */
     public void setOnToggleNotes(java.util.function.Consumer<Boolean> onToggleNotes) {
         this.onToggleNotes = onToggleNotes == null ? on -> {} : onToggleNotes;
     }
 
+    /** Resets the notes toggle to OFF and updates its label. */
     public void resetNotesModeToggle() {
         notesModeBtn.setSelected(false);
         notesModeBtn.setText("Notes Mode: OFF");
     }
 
+    /**
+     * Synchronizes the notes toggle with external note-mode state.
+     *
+     * @param enabled true when notes mode should be shown as enabled
+     */
     public void setNotesModeToggle(boolean enabled) {
         notesModeBtn.setSelected(enabled);
         notesModeBtn.setText(enabled ? "Notes Mode: ON" : "Notes Mode: OFF");
     }
 
+    /**
+     * Applies active theme colors to panel and all controls.
+     */
     public void refreshTheme() {
         SudokuTheme theme = styleSetting.getTheme();
 
@@ -92,6 +135,14 @@ public class ControlPanel extends JPanel {
         styleButton(notesModeBtn, buttonBg, text, border);
     }
 
+    /**
+     * Applies standard styling for one control button.
+     *
+     * @param button button to style
+     * @param bg background color
+     * @param text text color
+     * @param border border color
+     */
     private void styleButton(
         javax.swing.AbstractButton button,
         Color bg,

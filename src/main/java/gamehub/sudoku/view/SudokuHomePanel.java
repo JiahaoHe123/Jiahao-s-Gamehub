@@ -41,12 +41,18 @@ public class SudokuHomePanel extends JPanel {
 
     /** Persistent game record used to display statistics. */
     private final SudokuGameRecord record;
+    /** Shared style settings used for theme updates. */
     private final SudokuStyleSetting styleSetting;
+    /** Viewport-width content container hosting the centered card. */
     private final JPanel content;
+    /** Scroll wrapper for the home content. */
     private final JScrollPane scrollPane;
 
+    /** Center card containing title, stats, and actions. */
     private final JPanel card;
+    /** Main page title label. */
     private final JLabel titleLabel;
+    /** Instructional subtitle label. */
     private final JLabel subtitleLabel;
 
     /** Label that displays win/loss statistics for all difficulty levels. */
@@ -56,12 +62,19 @@ public class SudokuHomePanel extends JPanel {
     private final Map<SudokuDifficulty, JButton> difficultyButtons =
         new EnumMap<>(SudokuDifficulty.class);
 
+    /** Exit button returning to host module. */
     private final JButton quitBtn;
 
     /** External callbacks. */
     private Consumer<SudokuDifficulty> onStart = difficulty -> {};
     private Runnable onQuit = () -> {};
 
+    /**
+     * Creates the Sudoku home page panel.
+     *
+     * @param record persistent record provider for stats display
+     * @param styleSetting shared style settings used for theming
+     */
     public SudokuHomePanel(SudokuGameRecord record, SudokuStyleSetting styleSetting) {
         super(new BorderLayout());
         this.record = record;
@@ -131,14 +144,27 @@ public class SudokuHomePanel extends JPanel {
         refreshTheme();
     }
 
+    /**
+     * Sets the callback invoked when a difficulty button is pressed.
+     *
+     * @param onStart callback receiving chosen difficulty; no-op when null
+     */
     public void setOnStart(Consumer<SudokuDifficulty> onStart) {
         this.onStart = onStart == null ? difficulty -> {} : onStart;
     }
 
+    /**
+     * Sets the callback invoked when Quit is pressed.
+     *
+     * @param onQuit callback to execute; no-op when null
+     */
     public void setOnQuit(Runnable onQuit) {
         this.onQuit = onQuit == null ? () -> {} : onQuit;
     }
 
+    /**
+     * Re-applies the active theme to the full home page UI.
+     */
     public void refreshTheme() {
         SudokuTheme theme = styleSetting.getTheme();
 
@@ -189,6 +215,11 @@ public class SudokuHomePanel extends JPanel {
         );
     }
 
+    /**
+     * Builds the central vertical content card.
+     *
+     * @return configured card panel
+     */
     private JPanel buildCard() {
         JPanel card = new JPanel();
         card.setLayout(new BoxLayout(card, BoxLayout.Y_AXIS));
@@ -196,6 +227,11 @@ public class SudokuHomePanel extends JPanel {
         return card;
     }
 
+    /**
+     * Creates the home title label.
+     *
+     * @return title label
+     */
     private JLabel createTitleLabel() {
         JLabel title = new JLabel("Sudoku");
         title.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -203,6 +239,11 @@ public class SudokuHomePanel extends JPanel {
         return title;
     }
 
+    /**
+     * Creates the subtitle label shown below the title.
+     *
+     * @return subtitle label
+     */
     private JLabel createSubtitleLabel() {
         JLabel subtitle = new JLabel("Please choose difficulty level");
         subtitle.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -210,6 +251,11 @@ public class SudokuHomePanel extends JPanel {
         return subtitle;
     }
 
+    /**
+     * Applies shared sizing/typography defaults for action buttons.
+     *
+     * @param button button to style
+     */
     private void styleButton(JButton button) {
         button.setAlignmentX(Component.CENTER_ALIGNMENT);
         button.setFont(new Font("SansSerif", Font.PLAIN, 16));
@@ -218,6 +264,12 @@ public class SudokuHomePanel extends JPanel {
         button.setPreferredSize(new java.awt.Dimension(260, 40));
     }
 
+    /**
+     * Applies theme-dependent colors and border to a button.
+     *
+     * @param button button to style
+     * @param theme active Sudoku theme
+     */
     private void styleActionButton(JButton button, SudokuTheme theme) {
         button.setForeground(theme.getTextPrimary());
         button.setBackground(theme.getButtonBackground());

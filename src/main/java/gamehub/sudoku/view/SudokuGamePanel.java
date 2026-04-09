@@ -64,6 +64,13 @@ public class SudokuGamePanel extends JPanel {
     /** The currently selected difficulty for the ongoing game. */
     private SudokuDifficulty currentDifficulty = SudokuDifficulty.EASY;
 
+    /**
+     * Builds the Sudoku game page shell.
+     *
+     * @param onHome callback used to return to home page
+     * @param record persistent Sudoku record service
+     * @param styleSetting shared style settings used for theming
+     */
     public SudokuGamePanel(
         Runnable onHome,
         SudokuGameRecord record,
@@ -90,6 +97,11 @@ public class SudokuGamePanel extends JPanel {
         refreshTheme();
     }
 
+    /**
+     * Starts a new game for the selected difficulty and rebinds all callbacks.
+     *
+     * @param difficulty difficulty for the new puzzle
+     */
     public void startNewGame(SudokuDifficulty difficulty) {
         this.currentDifficulty = difficulty;
 
@@ -125,6 +137,9 @@ public class SudokuGamePanel extends JPanel {
         SwingUtilities.invokeLater(() -> boardPanel.requestFocusInWindow());
     }
 
+    /**
+     * Re-applies active theme colors to all game subcomponents.
+     */
     public void refreshTheme() {
         SudokuTheme theme = styleSetting.getTheme();
 
@@ -153,6 +168,11 @@ public class SudokuGamePanel extends JPanel {
         repaint();
     }
 
+    /**
+     * Creates the top bar containing number counts and attempts label.
+     *
+     * @return top bar panel
+     */
     private JPanel buildTopBar() {
         JPanel topBar = new JPanel(new BorderLayout());
         topBar.setOpaque(false);
@@ -163,6 +183,11 @@ public class SudokuGamePanel extends JPanel {
         return topBar;
     }
 
+    /**
+     * Creates the attempts label shown on the top-right area.
+     *
+     * @return configured attempts label
+     */
     private JLabel createAttemptsLabel() {
         JLabel label = new JLabel();
         label.setFont(new java.awt.Font("SansSerif", java.awt.Font.BOLD, 14));
@@ -174,12 +199,22 @@ public class SudokuGamePanel extends JPanel {
         return label;
     }
 
+    /**
+     * Creates the center wrapper that keeps the board card centered.
+     *
+     * @return center wrapper panel
+     */
     private JPanel createCenterWrap() {
         JPanel wrap = new JPanel(new GridBagLayout());
         wrap.setOpaque(false);
         return wrap;
     }
 
+    /**
+     * Creates the card-like board container and inserts it into center wrapper.
+     *
+     * @return board card panel
+     */
     private JPanel createBoardCard() {
         JPanel card = new JPanel(new BorderLayout());
         card.setBackground(styleSetting.getTheme().getCardBackground());
@@ -202,6 +237,9 @@ public class SudokuGamePanel extends JPanel {
         return card;
     }
 
+    /**
+     * Wires top-bar widgets to controller state updates.
+     */
     private void bindTopBarToController() {
         refreshAttemptsLabel();
         refreshNumberBar();
@@ -215,26 +253,37 @@ public class SudokuGamePanel extends JPanel {
         controller.setOnCountsChanged(this::refreshNumberBar);
     }
 
+    /**
+     * Wires win/lose callbacks from controller to UI handlers.
+     */
     private void bindControllerCallbacks() {
         controller.setOnWin(() -> SwingUtilities.invokeLater(this::handleWin));
         controller.setOnLose(() -> SwingUtilities.invokeLater(this::handleLose));
     }
 
+    /**
+     * Replaces the board area with the current board panel wrapped to square ratio.
+     */
     private void replaceBoardComponent() {
         boardCard.removeAll();
         boardCard.add(new SquareWrap(boardPanel), BorderLayout.CENTER);
     }
 
+    /** Updates attempts label text from controller state. */
     private void refreshAttemptsLabel() {
         attemptsLabel.setText(
             "Mistakes left: " + controller.getRemainingAttempts()
         );
     }
 
+    /** Updates number bar with current remaining digit counts. */
     private void refreshNumberBar() {
         numberBar.setRemaining(controller.getRemainingCounts());
     }
 
+    /**
+     * Handles win flow: persist result and prompt for next action.
+     */
     private void handleWin() {
         record.recordWin(currentDifficulty);
 
@@ -264,6 +313,9 @@ public class SudokuGamePanel extends JPanel {
         }
     }
 
+    /**
+     * Handles lose flow: persist result, show message, and return home.
+     */
     private void handleLose() {
         record.recordLoss(currentDifficulty);
         JOptionPane.showMessageDialog(

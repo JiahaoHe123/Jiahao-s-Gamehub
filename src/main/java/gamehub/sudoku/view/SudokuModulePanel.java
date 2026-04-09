@@ -14,20 +14,40 @@ import gamehub.sudoku.model.SudokuTheme;
 import gamehub.sudoku.model.SudokuStyleSetting;
 
 /**
- * Root sudoku module panel that can be embedded in Game Hub.
+ * Root Sudoku module panel embedded inside the Game Hub host.
+ *
+ * <p>This panel manages:</p>
+ * <ul>
+ * <li>home/game navigation via {@link CardLayout},</li>
+ * <li>module-scoped style settings and theme toggling, and</li>
+ * <li>wiring between home and game subpanels.</li>
+ * </ul>
  */
 public class SudokuModulePanel extends JPanel {
 
+    /** Card layout controlling HOME and GAME pages. */
     private final CardLayout cardLayout = new CardLayout();
+    /** Module root that hosts the card-switched pages. */
     private final JPanel moduleRoot = new JPanel(cardLayout);
+    /** Style settings shared by all Sudoku module views. */
     private final SudokuStyleSetting styleSetting;
 
+    /** Home page panel. */
     private final SudokuHomePanel homePanel;
+    /** Game page panel. */
     private final SudokuGamePanel gamePanel;
+    /** Top action bar containing module-level actions. */
     private final JPanel topBar;
+    /** Button returning to the host hub page. */
     private final JButton backButton;
+    /** Button toggling module light/dark theme. */
     private final JButton themeButton;
 
+    /**
+     * Creates the Sudoku module and wires host navigation callbacks.
+     *
+     * @param onBackToHub callback invoked when returning to Game Hub
+     */
     public SudokuModulePanel(Runnable onBackToHub) {
         super(new BorderLayout());
 
@@ -65,11 +85,19 @@ public class SudokuModulePanel extends JPanel {
         applyTheme(AppTheme.LIGHT);
     }
 
+    /**
+     * Activates this module and ensures the home page is visible.
+     */
     public void activate() {
         showHome();
         homePanel.requestFocusInWindow();
     }
 
+    /**
+     * Applies host app theme to Sudoku module theme state.
+     *
+     * @param theme host app theme
+     */
     public void applyTheme(AppTheme theme) {
         if (theme == null) {
             return;
@@ -79,6 +107,9 @@ public class SudokuModulePanel extends JPanel {
         refreshThemeViews();
     }
 
+    /**
+     * Re-applies theme styles across home/game pages and top bar controls.
+     */
     private void refreshThemeViews() {
 
         homePanel.refreshTheme();
@@ -115,6 +146,9 @@ public class SudokuModulePanel extends JPanel {
         setBackground(moduleRoot.getBackground());
     }
 
+    /**
+     * Navigates to the module home page and refreshes stats/theme.
+     */
     private void showHome() {
         homePanel.refreshStats();
         homePanel.refreshTheme();
@@ -123,6 +157,11 @@ public class SudokuModulePanel extends JPanel {
         moduleRoot.repaint();
     }
 
+    /**
+     * Starts a game at the selected difficulty and navigates to game page.
+     *
+     * @param difficulty chosen puzzle difficulty
+     */
     private void startNewGame(SudokuDifficulty difficulty) {
         gamePanel.startNewGame(difficulty);
         gamePanel.refreshTheme();
