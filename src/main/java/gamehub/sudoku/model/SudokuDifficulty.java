@@ -7,27 +7,35 @@ package gamehub.sudoku.model;
  * <ul>
  * <li>a stable storage key for persistence,</li>
  * <li>a display name for UI labels, and</li>
- * <li>the target number of empty cells when generating a puzzle.</li>
+ * <li>the target number of empty cells when generating a puzzle, and</li>
+ * <li>the allowed hint count for one game round.</li>
  * </ul>
  */
 public enum SudokuDifficulty {
     /** Beginner-friendly puzzle with fewer blanks. */
-    EASY("easy", "Easy", 30),
+    EASY("easy", "Easy", 30, 0),
     /** Balanced puzzle for regular play. */
-    MEDIUM("medium", "Medium", 40),
+    MEDIUM("medium", "Medium", 40, 1),
     /** Challenging puzzle with more blanks. */
-    HARD("hard", "Hard", 50),
+    HARD("hard", "Hard", 50, 2),
     /** Very difficult puzzle variant with aggressive cell removal. */
-    NIGHTMARE("nightmare", "Nightmare", 60);
+    NIGHTMARE("nightmare", "Nightmare", 60, 3);
 
     private final String storageKey;
     private final String displayName;
     private final int emptyCells;
+    private final int hintCount;
 
-    SudokuDifficulty(String storageKey, String displayName, int emptyCells) {
+    SudokuDifficulty(
+        String storageKey,
+        String displayName,
+        int emptyCells,
+        int hintCount
+    ) {
         this.storageKey = storageKey;
         this.displayName = displayName;
         this.emptyCells = emptyCells;
+        this.hintCount = hintCount;
     }
 
     /**
@@ -55,6 +63,15 @@ public enum SudokuDifficulty {
      */
     public int emptyCells() {
         return emptyCells;
+    }
+
+    /**
+     * Returns allowed hint usages for one round at this difficulty.
+     *
+     * @return hint quota for a game round
+     */
+    public int hintCount() {
+        return hintCount;
     }
 
     /**

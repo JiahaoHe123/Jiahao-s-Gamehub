@@ -195,6 +195,15 @@ public class BoardPanel extends JPanel {
         );
     }
 
+    public void showHintUnavailableMessage() {
+        JOptionPane.showMessageDialog(
+            this,
+            "Please select an editable cell to use Hint.",
+            "No hint available",
+            JOptionPane.INFORMATION_MESSAGE
+        );
+    }
+
     /**
      * Marks a cell as correct and locks it as fixed.
      *

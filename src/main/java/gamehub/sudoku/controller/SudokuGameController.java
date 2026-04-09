@@ -159,6 +159,44 @@ public class SudokuGameController {
         boardPanel.refreshHighlights();
     }
 
+    /**
+     * Applies a hint to the selected cell by filling the correct answer.
+     *
+     * <p>
+     * The hint only applies when the selected cell exists, and is editable
+     * </p>
+     *
+     * @param selectedButton selected cell
+     * @return {@code true} if a hint was applied; otherwise {@code false}
+     */
+    public boolean applyHintToSelectedCell(CellButton selectedButton) {
+        if (selectedButton == null || selectedButton.isFixed()) {
+            return false;
+        }
+
+        int rowNum = selectedButton.getRowIndex();
+        int colNum = selectedButton.getColIndex();
+        int index = rowNum * BoardPanel.SIZE + colNum;
+        int answer = solution.get(index);
+
+        selectedButton.clearNotes();
+        selectedButton.setText(String.valueOf(answer));
+        boardPanel.markCellCorrect(selectedButton);
+
+        totalAdded++;
+        countOfEachNum[answer - 1] += 1;
+        onCountsChanged.run();
+
+        removeIllegalNotes(rowNum, colNum, answer);
+        boardPanel.refreshHighlights();
+
+        if (totalAdded == boardModel.numOfEmptyCells()) {
+            onWin.run();
+        }
+
+        return true;
+    }
+
     /** Initializes placed-number counts based on current board values. */
     private void initializeCounts(SudokuBoard boardModel) {
         for (int num : boardModel) {

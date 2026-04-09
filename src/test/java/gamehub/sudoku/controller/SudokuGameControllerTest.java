@@ -223,6 +223,60 @@ public class SudokuGameControllerTest {
         controller.checkWholeBoard();
     }
 
+    @Test
+    public void applyHintToSelectedCellFillsCorrectValueAndCanTriggerWin() {
+        StubSudokuBoard board = stubBoard(
+            zeroBoard(),
+            solutionWithFirstValue(4),
+            1,
+            false
+        );
+        TestBoardPanel panel = new TestBoardPanel(board);
+
+        SudokuGameController controller =
+            new SudokuGameController(board, panel);
+
+        AtomicInteger countChanged = new AtomicInteger(0);
+        AtomicInteger wins = new AtomicInteger(0);
+        controller.setOnCountsChanged(countChanged::incrementAndGet);
+        controller.setOnWin(wins::incrementAndGet);
+
+        CellButton button = new CellButton("");
+        button.setGridPosition(0, 0);
+
+        boolean applied = controller.applyHintToSelectedCell(button);
+
+        assertTrue(applied);
+        assertEquals("4", button.getText());
+        assertTrue(button.isFixed());
+        assertEquals(1, panel.markCorrectCalls);
+        assertEquals(1, panel.refreshHighlightsCalls);
+        assertEquals(1, countChanged.get());
+        assertEquals(1, wins.get());
+        assertEquals(8, controller.getRemainingCounts()[3]);
+    }
+
+    @Test
+    public void applyHintToSelectedCellReturnsFalseWhenCellIsNotEligible() {
+        StubSudokuBoard board = stubBoard(
+            zeroBoard(),
+            solutionWithFirstValue(9),
+            81,
+            false
+        );
+        TestBoardPanel panel = new TestBoardPanel(board);
+
+        SudokuGameController controller =
+            new SudokuGameController(board, panel);
+
+        assertFalse(controller.applyHintToSelectedCell(null));
+
+        CellButton fixed = new CellButton("");
+        fixed.setGridPosition(0, 0);
+        fixed.setFixed(true);
+        assertFalse(controller.applyHintToSelectedCell(fixed));
+    }
+
     private static StubSudokuBoard stubBoard(
         List<Integer> boardValues,
         List<Integer> solution,

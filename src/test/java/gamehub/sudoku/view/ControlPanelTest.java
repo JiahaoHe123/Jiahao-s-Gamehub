@@ -23,16 +23,19 @@ public class ControlPanelTest {
 
         AtomicInteger homeCalls = new AtomicInteger(0);
         AtomicInteger checkCalls = new AtomicInteger(0);
+        AtomicInteger hintCalls = new AtomicInteger(0);
         AtomicInteger resetCalls = new AtomicInteger(0);
         List<Boolean> toggleStates = new ArrayList<>();
 
         panel.setOnHome(homeCalls::incrementAndGet);
         panel.setOnCheck(checkCalls::incrementAndGet);
+        panel.setOnHint(hintCalls::incrementAndGet);
         panel.setOnResetNotes(resetCalls::incrementAndGet);
         panel.setOnToggleNotes(toggleStates::add);
 
         findButton(panel, "Home").doClick();
         findButton(panel, "Check").doClick();
+        findButton(panel, "Hint").doClick();
         findButton(panel, "Reset Notes").doClick();
 
         AbstractButton notesToggle = findButton(panel, "Notes Mode:");
@@ -41,6 +44,7 @@ public class ControlPanelTest {
 
         assertEquals(1, homeCalls.get());
         assertEquals(1, checkCalls.get());
+        assertEquals(1, hintCalls.get());
         assertEquals(1, resetCalls.get());
         assertEquals(List.of(true, false), toggleStates);
         assertEquals("Notes Mode: OFF", notesToggle.getText());
@@ -82,6 +86,26 @@ public class ControlPanelTest {
         panel.resetNotesModeToggle();
         assertFalse(notesToggle.isSelected());
         assertEquals("Notes Mode: OFF", notesToggle.getText());
+    }
+
+    @Test
+    public void setHintRemainingUpdatesHintButtonTextAndEnabledState() {
+        SudokuStyleSetting styleSetting = new SudokuStyleSetting();
+        ControlPanel panel = new ControlPanel(styleSetting);
+
+        AbstractButton hintButton = findButton(panel, "Hint");
+
+        panel.setHintRemaining(2);
+        assertTrue(hintButton.isEnabled());
+        assertEquals("Hint (2)", hintButton.getText());
+
+        panel.setHintRemaining(0);
+        assertFalse(hintButton.isEnabled());
+        assertEquals("Hint (0)", hintButton.getText());
+
+        panel.setHintRemaining(-5);
+        assertFalse(hintButton.isEnabled());
+        assertEquals("Hint (0)", hintButton.getText());
     }
 
     private static AbstractButton findButton(

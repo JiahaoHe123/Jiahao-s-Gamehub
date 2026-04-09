@@ -71,6 +71,9 @@ public class SudokuGamePanel extends JPanel {
     /** Elapsed seconds for the current round. */
     private int elapsedSeconds;
 
+    /** Remaining hint usages for current round. */
+    private int remainingHints;
+
     /** The currently selected difficulty for the ongoing game. */
     private SudokuDifficulty currentDifficulty = SudokuDifficulty.EASY;
 
@@ -115,6 +118,7 @@ public class SudokuGamePanel extends JPanel {
      */
     public void startNewGame(SudokuDifficulty difficulty) {
         this.currentDifficulty = difficulty;
+        this.remainingHints = difficulty.hintCount();
 
         SudokuBoard boardModel = new SudokuBoard(difficulty);
         boardPanel = new BoardPanel(boardModel, styleSetting);
@@ -126,9 +130,56 @@ public class SudokuGamePanel extends JPanel {
         controller.setOnNoteModeChanged(controlPanel::setNotesModeToggle);
         replaceBoardComponent();
         controlPanel.resetNotesModeToggle();
+        controlPanel.setHintRemaining(remainingHints);
 
         controlPanel.setOnCheck(() -> {
             controller.checkWholeBoard();
+            boardPanel.requestFocusInWindow();
+        });
+
+        controlPanel.setOnHint(() -> {
+            if (remainingHints <= 0) {
+                controlPanel.setHintRemaining(0);
+                JOptionPane.showMessageDialog(
+                    this,
+                    "No hints remaining for this difficulty.",
+                    "Hint unavailable",
+                    JOptionPane.INFORMATION_MESSAGE
+                );
+                boardPanel.requestFocusInWindow();
+                return;
+            }
+
+            CellButton selectedButton = boardPanel.getSelectedButton();
+            if (selectedButton == null) {
+                JOptionPane.showMessageDialog(
+                    this,
+                    "Please select a cell first.",
+                    "Hint unavailable",
+                    JOptionPane.INFORMATION_MESSAGE
+                );
+                boardPanel.requestFocusInWindow();
+                return;
+            }
+
+            if (selectedButton.isFixed()) {
+                JOptionPane.showMessageDialog(
+                    this,
+                    "Hint can only be used on editable cells.",
+                    "Hint unavailable",
+                    JOptionPane.INFORMATION_MESSAGE
+                );
+                boardPanel.requestFocusInWindow();
+                return;
+            }
+
+            boolean hinted =
+                controller.applyHintToSelectedCell(selectedButton);
+            if (hinted) {
+                remainingHints--;
+                controlPanel.setHintRemaining(remainingHints);
+            }
+
             boardPanel.requestFocusInWindow();
         });
 

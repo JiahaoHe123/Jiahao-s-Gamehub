@@ -24,6 +24,8 @@ public class ControlPanel extends JPanel {
     private final JButton homeBtn = new JButton("Home");
     /** Triggers full-board answer validation. */
     private final JButton checkBtn = new JButton("Check");
+    /** Fills the selected editable empty cell with the correct value. */
+    private final JButton hintBtn = new JButton("Hint");
     /** Clears all note candidates from the board. */
     private final JButton resetBtn = new JButton("Reset Notes");
     /** Toggle for enabling/disabling note input mode. */
@@ -34,6 +36,8 @@ public class ControlPanel extends JPanel {
     private Runnable onHome = () -> {};
     /** Check button callback. */
     private Runnable onCheck = () -> {};
+    /** Hint button callback. */
+    private Runnable onHint = () -> {};
     /** Reset notes button callback. */
     private Runnable onResetNotes = () -> {};
     /** Notes-mode toggle callback receiving the new toggle state. */
@@ -51,11 +55,13 @@ public class ControlPanel extends JPanel {
 
         add(homeBtn);
         add(checkBtn);
+        add(hintBtn);
         add(resetBtn);
         add(notesModeBtn);
 
         homeBtn.addActionListener(e -> onHome.run());
         checkBtn.addActionListener(e -> onCheck.run());
+        hintBtn.addActionListener(e -> onHint.run());
         resetBtn.addActionListener(e -> onResetNotes.run());
 
         notesModeBtn.addActionListener(e -> {
@@ -81,6 +87,15 @@ public class ControlPanel extends JPanel {
      */
     public void setOnCheck(Runnable onCheck) {
         this.onCheck = onCheck == null ? () -> {} : onCheck;
+    }
+
+    /**
+     * Sets the callback for the Hint button.
+     *
+     * @param onHint callback to execute; no-op when {@code null}
+     */
+    public void setOnHint(Runnable onHint) {
+        this.onHint = onHint == null ? () -> {} : onHint;
     }
 
     /**
@@ -120,6 +135,17 @@ public class ControlPanel extends JPanel {
     }
 
     /**
+     * Updates hint button state from remaining hint quota.
+     *
+     * @param remainingHints hints left for current round
+     */
+    public void setHintRemaining(int remainingHints) {
+        int safeRemaining = Math.max(remainingHints, 0);
+        hintBtn.setEnabled(safeRemaining > 0);
+        hintBtn.setText("Hint (" + safeRemaining + ")");
+    }
+
+    /**
      * Applies active theme colors to panel and all controls.
      */
     public void refreshTheme() {
@@ -133,6 +159,7 @@ public class ControlPanel extends JPanel {
 
         styleButton(homeBtn, buttonBg, text, border);
         styleButton(checkBtn, buttonBg, text, border);
+        styleButton(hintBtn, buttonBg, text, border);
         styleButton(resetBtn, buttonBg, text, border);
         styleButton(notesModeBtn, buttonBg, text, border);
     }
