@@ -150,7 +150,9 @@ public class BoardPanel extends JPanel {
                 try {
                     result[r * SIZE + c] = Integer.parseInt(text);
                 } catch (NumberFormatException e) {
-                    throw new IllegalStateException("Invalid cell value: " + text, e);
+                    throw new IllegalStateException(
+                        "Invalid cell value: " + text, e
+                    );
                 }
             }
         }
@@ -258,7 +260,8 @@ public class BoardPanel extends JPanel {
     }
 
     /**
-     * Builds all cell components from the board model and wires selection actions.
+     * Builds all cell components from
+     * the board model and wires selection actions.
      *
      * @param boardModel source board data
      */
@@ -286,7 +289,9 @@ public class BoardPanel extends JPanel {
             int right = (col == SIZE - 1) ? 3 : 1;
 
             btn.setBorder(
-                BorderFactory.createMatteBorder(top, left, bottom, right, Color.DARK_GRAY)
+                BorderFactory.createMatteBorder(
+                    top, left, bottom, right, Color.DARK_GRAY
+                )
             );
 
             final CellButton current = btn;
@@ -349,7 +354,8 @@ public class BoardPanel extends JPanel {
                 btn.clearHighlightedNote();
 
                 if (btn != selectedButton) {
-                    boolean sameAnswer = hasTarget && value.equals(btn.getText());
+                    boolean sameAnswer =
+                        hasTarget && value.equals(btn.getText());
                     boolean hasNote = hasTarget && btn.containsNote(target);
 
                     if (btn.getCellState() == CellButton.State.WRONG) {

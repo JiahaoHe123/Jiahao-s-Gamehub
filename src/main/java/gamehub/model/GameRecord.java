@@ -118,8 +118,13 @@ public abstract class GameRecord {
      * </p>
      * <ul>
      *   <li>If the new file already exists, it is returned immediately</li>
-     *   <li>If the old file does not exist, the new target path is returned</li>
-     *   <li>If the old file exists and the new one does not, the old file is moved</li>
+     *   <li>
+     *      If the old file does not exist, the new target path is returned
+     *   </li>
+     *   <li>
+     *      If the old file exists and the new one does not,
+     *      the old file is moved
+     *   </li>
      * </ul>
      *
      * @param oldAppName old application data directory name
@@ -167,7 +172,9 @@ public abstract class GameRecord {
      * @param target target file path
      * @throws IOException if both move attempts fail
      */
-    private static void moveWithFallback(Path source, Path target) throws IOException {
+    private static void moveWithFallback(
+        Path source, Path target
+    ) throws IOException {
         try {
             Files.move(source, target, StandardCopyOption.ATOMIC_MOVE);
         } catch (IOException ignored) {

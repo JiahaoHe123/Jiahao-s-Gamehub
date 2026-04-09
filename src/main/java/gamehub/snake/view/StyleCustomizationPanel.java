@@ -362,8 +362,12 @@ public class StyleCustomizationPanel extends JPanel {
         themeCombo.setSelectedItem(
             styleSettings.getTheme() == SnakeTheme.LIGHT ? "Light" : "Dark"
         );
-        difficultyCombo.setSelectedItem(styleSettings.getDifficulty().displayName());
-        boardSizeCombo.setSelectedItem(styleSettings.getBoardSize().displayName());
+        difficultyCombo.setSelectedItem(
+            styleSettings.getDifficulty().displayName()
+        );
+        boardSizeCombo.setSelectedItem(
+            styleSettings.getBoardSize().displayName()
+        );
         refreshPreview();
         refreshTheme();
     }
@@ -445,7 +449,9 @@ public class StyleCustomizationPanel extends JPanel {
             styleSettings.setRenderMode(SnakeStyleSetting.RenderMode.BLOCKS);
             styleSettings.setPattern("<>");
         } else {
-            styleSettings.setRenderMode(SnakeStyleSetting.RenderMode.TEXT_PATTERN);
+            styleSettings.setRenderMode(
+                SnakeStyleSetting.RenderMode.TEXT_PATTERN
+            );
             if (chevronOption.isSelected()) {
                 styleSettings.setPattern("<>");
             } else {

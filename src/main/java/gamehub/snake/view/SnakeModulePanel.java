@@ -88,7 +88,9 @@ public class SnakeModulePanel extends JPanel {
             return;
         }
 
-        styleSetting.setTheme(appTheme.isDark() ? SnakeTheme.DARK : SnakeTheme.LIGHT);
+        styleSetting.setTheme(
+            appTheme.isDark() ? SnakeTheme.DARK : SnakeTheme.LIGHT
+        );
 
         homePanel.refreshTheme();
         gamePanel.refreshTheme();
@@ -100,7 +102,9 @@ public class SnakeModulePanel extends JPanel {
         backButton.setForeground(theme.getText());
         backButton.setBackground(theme.getButtonBackground());
         backButton.setBorder(
-            javax.swing.BorderFactory.createLineBorder(theme.getButtonBorder(), 1, true)
+            javax.swing.BorderFactory.createLineBorder(
+                theme.getButtonBorder(), 1, true
+            )
         );
         backButton.setOpaque(true);
         setBackground(theme.getBackground());

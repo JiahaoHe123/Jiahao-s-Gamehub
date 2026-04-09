@@ -54,16 +54,8 @@ public class SudokuBoard implements Iterable<Integer> {
     private static final int SIZE = 9; // Board dimension (9x9).
 
     /** Candidate numbers that can appear in Sudoku cells. */
-    private static final List<Integer> POOL = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9);
-
-    /** Difficulty -> number of cells to remove (i.e., how many blanks). */
-    // private static final Map<Difficulty, Integer> MAP = new EnumMap<>(Difficulty.class);
-
-    // static {
-    //     MAP.put(Difficulty.EASY, 30);
-    //     MAP.put(Difficulty.MEDIUM, 40);
-    //     MAP.put(Difficulty.HARD, 50);
-    // }
+    private static final List<Integer> POOL =
+        Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9);
 
     /** Current puzzle grid; {@code 0} indicates an empty cell. */
     private int[][] data;
@@ -98,9 +90,6 @@ public class SudokuBoard implements Iterable<Integer> {
         // Remove cells according to difficulty
         // while keeping uniqueness if possible.
         emptyCells = removeEntries(difficulty);
-
-        // Store the configured number of empty cells for win detection/UI.
-        // emptyCells = MAP.get(difficulty);
     }
 
     /**
@@ -126,7 +115,9 @@ public class SudokuBoard implements Iterable<Integer> {
     private SudokuBoard(List<Integer> input) {
         data = new int[SIZE][SIZE];
         if (input.size() != 81) {
-            throw new IllegalArgumentException("Please give a valid 9x9 matrix");
+            throw new IllegalArgumentException(
+                "Please give a valid 9x9 matrix"
+            );
         }
         // Map row-major list into 2D array.
         for (int i = 0; i < input.size(); i++) {
@@ -136,7 +127,8 @@ public class SudokuBoard implements Iterable<Integer> {
     }
 
     /**
-     * Check whether placing {@code val} at (row, col) violates Sudoku constraints.
+     * Check whether placing {@code val} at
+     * (row, col) violates Sudoku constraints.
      *
      * <p>
      * Delegates to
@@ -216,7 +208,8 @@ public class SudokuBoard implements Iterable<Integer> {
      * </p>
      *
      * <p>
-     * The loop is bounded by a max number of attempts to prevent infinite loops.
+     * The loop is bounded by a max number of attempts
+     * to prevent infinite loops.
      * </p>
      *
      * @param difficulty game difficulty
@@ -283,8 +276,8 @@ public class SudokuBoard implements Iterable<Integer> {
     }
 
     /**
-     * Recursively count solutions for the given grid, with early stop when count
-     * &gt; 1.
+     * Recursively count solutions for the given grid,
+     * with early stop when count > 1.
      *
      * @param grid  working grid (mutated during recursion)
      * @param row   current row

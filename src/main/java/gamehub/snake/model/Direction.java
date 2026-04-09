@@ -42,7 +42,8 @@ public enum Direction {
      * Returns whether this direction is opposite to another direction.
      *
      * @param other direction to compare with
-     * @return {@code true} if vectors cancel each other out; otherwise {@code false}
+     * @return {@code true} if vectors cancel each other out;
+     *      otherwise {@code false}
      */
     public boolean isOpposite(Direction other) {
         return dx + other.dx == 0 && dy + other.dy == 0;

@@ -97,7 +97,9 @@ public class ControlPanel extends JPanel {
      *
      * @param onToggleNotes receives selected state; no-op when {@code null}
      */
-    public void setOnToggleNotes(java.util.function.Consumer<Boolean> onToggleNotes) {
+    public void setOnToggleNotes(
+        java.util.function.Consumer<Boolean> onToggleNotes
+    ) {
         this.onToggleNotes = onToggleNotes == null ? on -> {} : onToggleNotes;
     }
 
@@ -151,7 +153,11 @@ public class ControlPanel extends JPanel {
     ) {
         button.setBackground(bg);
         button.setForeground(text);
-        button.setBorder(javax.swing.BorderFactory.createLineBorder(border, 1, true));
+        button.setBorder(
+            javax.swing.BorderFactory.createLineBorder(
+                border, 1, true
+            )
+        );
         button.setOpaque(true);
         button.setFocusPainted(false);
     }

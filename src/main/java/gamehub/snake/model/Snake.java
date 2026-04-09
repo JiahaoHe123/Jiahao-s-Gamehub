@@ -61,7 +61,8 @@ public class Snake {
      * Moves snake to the given next head, optionally growing by one segment.
      *
      * @param nextHead next head position
-     * @param grows whether tail should be kept (growth) or removed (normal move)
+     * @param grows whether tail should be kept (growth)
+     *      or removed (normal move)
      */
     public void moveTo(Point nextHead, boolean grows) {
         body.addFirst(nextHead);

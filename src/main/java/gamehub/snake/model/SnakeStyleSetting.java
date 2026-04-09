@@ -141,7 +141,8 @@ public class SnakeStyleSetting {
     }
 
     /**
-     * Sets color preset; falls back to {@link ColorPreset#CLASSIC_GREEN} when null.
+     * Sets color preset;
+     * falls back to {@link ColorPreset#CLASSIC_GREEN} when null.
      */
     public void setColorPreset(ColorPreset colorPreset) {
         this.colorPreset =
@@ -179,7 +180,8 @@ public class SnakeStyleSetting {
      * Sets difficulty; falls back to {@link SnakeDifficulty#HARD} when null.
      */
     public void setDifficulty(SnakeDifficulty difficulty) {
-        this.difficulty = difficulty == null ? SnakeDifficulty.HARD : difficulty;
+        this.difficulty =
+            difficulty == null ? SnakeDifficulty.HARD : difficulty;
     }
 
     /** Returns currently selected board size. */

@@ -28,8 +28,9 @@ import gamehub.snake.model.SnakeGameRecord;
 /**
  * Main gameplay view for Snake.
  *
- * <p>This panel renders board, snake, food, HUD, and overlays (countdown/game over),
- * binds keyboard controls, and coordinates with {@link SnakeGameController} for
+ * <p>This panel renders board, snake, food, HUD,
+ * and overlays (countdown/game over), binds keyboard controls,
+ * and coordinates with {@link SnakeGameController} for
  * game state updates.</p>
  */
 public class SnakeGamePanel extends JPanel {
@@ -55,7 +56,9 @@ public class SnakeGamePanel extends JPanel {
      * @param styleSettings mutable style/gameplay settings
      * @param record persistent score record store
      */
-    public SnakeGamePanel(SnakeStyleSetting styleSettings, SnakeGameRecord record) {
+    public SnakeGamePanel(
+        SnakeStyleSetting styleSettings, SnakeGameRecord record
+    ) {
         this.styleSettings = styleSettings;
         this.record = record;
         this.controller = createController(
@@ -142,10 +145,12 @@ public class SnakeGamePanel extends JPanel {
         boolean boardSizeChanged =
             controller.getBoardWidth() != selectedBoardSize.width()
                 || controller.getBoardHeight() != selectedBoardSize.height();
-        boolean difficultyChanged = controller.getFps() != selectedDifficulty.fps();
+        boolean difficultyChanged =
+            controller.getFps() != selectedDifficulty.fps();
 
         if (boardSizeChanged || difficultyChanged) {
-            controller = createController(selectedBoardSize, selectedDifficulty);
+            controller =
+                createController(selectedBoardSize, selectedDifficulty);
             lastObservedGameState = controller.getGameState();
             setPreferredSize(
                 new Dimension(
@@ -172,7 +177,9 @@ public class SnakeGamePanel extends JPanel {
         homepageButton.setForeground(theme.getText());
         homepageButton.setBackground(theme.getButtonBackground());
         homepageButton.setBorder(
-            BorderFactory.createLineBorder(theme.getButtonBorder(), 1, true)
+            BorderFactory.createLineBorder(
+                theme.getButtonBorder(), 1, true
+            )
         );
         repaint();
     }
@@ -504,7 +511,10 @@ public class SnakeGamePanel extends JPanel {
 
         g2.setColor(theme.getTextSoft());
         g2.setFont(new Font("Menlo", Font.PLAIN, smallFont));
-        int controlsTextWidth = Math.max(150, (int) Math.round(cellSize * 9.5));
+        int controlsTextWidth = Math.max(
+            150,
+            (int) Math.round(cellSize * 9.5)
+        );
         int controlsX = boardOffsetX
             + boardPixelWidth
             - margin

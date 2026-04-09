@@ -279,7 +279,8 @@ public class SudokuGameRecord extends GameRecord {
                 return;
             }
 
-            List<String> lines = Files.readAllLines(filePath, StandardCharsets.UTF_8);
+            List<String> lines =
+                Files.readAllLines(filePath, StandardCharsets.UTF_8);
             for (String line : lines) {
                 String t = line.trim();
                 if (t.isEmpty() || t.startsWith("#"))

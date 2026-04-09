@@ -42,7 +42,9 @@ public class ViewportWidthPanel extends JPanel implements Scrollable {
         return 16;
     }
 
-    /** Returns larger scroll step used for page-up/page-down style scrolling. */
+    /** Returns larger scroll step used for
+     * page-up/page-down style scrolling.
+     */
     @Override
     public int getScrollableBlockIncrement(
         Rectangle visibleRect,
@@ -59,7 +61,8 @@ public class ViewportWidthPanel extends JPanel implements Scrollable {
     }
 
     /**
-     * Tracks viewport height only when viewport is taller than preferred height,
+     * Tracks viewport height only
+     * when viewport is taller than preferred height,
      * which prevents unnecessary vertical stretching.
      */
     @Override

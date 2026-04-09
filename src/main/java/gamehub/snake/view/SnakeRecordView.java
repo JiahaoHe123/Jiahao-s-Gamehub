@@ -49,7 +49,9 @@ public class SnakeRecordView extends JPanel {
      * @param styleSetting shared style/theme settings
      * @param record record provider for persisted scores
      */
-    public SnakeRecordView(SnakeStyleSetting styleSetting, SnakeGameRecord record) {
+    public SnakeRecordView(
+        SnakeStyleSetting styleSetting, SnakeGameRecord record
+    ) {
         super(new BorderLayout());
         this.styleSetting = styleSetting;
         this.record = record;
@@ -90,7 +92,9 @@ public class SnakeRecordView extends JPanel {
         backButton.setOpaque(true);
         backButton.setPreferredSize(new java.awt.Dimension(150, 40));
         backButton.setMaximumSize(new java.awt.Dimension(150, 40));
-        backButton.setCursor(java.awt.Cursor.getPredefinedCursor(java.awt.Cursor.HAND_CURSOR));
+        backButton.setCursor(
+            java.awt.Cursor.getPredefinedCursor(java.awt.Cursor.HAND_CURSOR)
+        );
         backButton.addActionListener(event -> onBackRequested.run());
 
         card.add(titleLabel);
@@ -131,7 +135,8 @@ public class SnakeRecordView extends JPanel {
      * @param onBackRequested callback for returning to previous page
      */
     public void setOnBackRequested(Runnable onBackRequested) {
-        this.onBackRequested = onBackRequested == null ? () -> {} : onBackRequested;
+        this.onBackRequested =
+            onBackRequested == null ? () -> {} : onBackRequested;
     }
 
     /** Rebuilds the score table and overall best display from record data. */
@@ -143,7 +148,10 @@ public class SnakeRecordView extends JPanel {
         int overallBest = 0;
         for (SnakeDifficulty difficulty : SnakeDifficulty.values()) {
             for (SnakeBoardSize boardSize : SnakeBoardSize.values()) {
-                overallBest = Math.max(overallBest, record.getScore(difficulty, boardSize));
+                overallBest = Math.max(
+                    overallBest,
+                    record.getScore(difficulty, boardSize)
+                );
             }
         }
 
@@ -152,8 +160,11 @@ public class SnakeRecordView extends JPanel {
         table.append("<tr><td align='left'><b><font color='")
             .append(primaryText)
             .append("'>Difficulty</font></b></td>");
+
+        String boardSizeStr = "<td style='padding-left:16px;' align='right'>"
+            + "<b><font color='";
         for (SnakeBoardSize boardSize : SnakeBoardSize.values()) {
-            table.append("<td style='padding-left:16px;' align='right'><b><font color='")
+            table.append(boardSizeStr)
                 .append(primaryText)
                 .append("'>")
                 .append(boardSize.displayName())
@@ -161,14 +172,18 @@ public class SnakeRecordView extends JPanel {
         }
         table.append("</tr>");
 
+        String difficultyStr = "<tr><td style='padding-top:6px;'"
+            + " align='left'><b><font color='";
+        String boardSizeStr2 = "<td style='padding-top:6px;padding-left:16px;'"
+            + " align='right'><font color='";
         for (SnakeDifficulty difficulty : SnakeDifficulty.values()) {
-            table.append("<tr><td style='padding-top:6px;' align='left'><b><font color='")
+            table.append(difficultyStr)
                 .append(primaryText)
                 .append("'>")
                 .append(difficulty.displayName())
                 .append("</font></b></td>");
             for (SnakeBoardSize boardSize : SnakeBoardSize.values()) {
-                table.append("<td style='padding-top:6px;padding-left:16px;' align='right'><font color='")
+                table.append(boardSizeStr2)
                     .append(secondaryText)
                     .append("'>")
                     .append(record.getScore(difficulty, boardSize))
@@ -210,7 +225,9 @@ public class SnakeRecordView extends JPanel {
 
         card.setBorder(
             BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(theme.getAccentSoft(), 1, true),
+                BorderFactory.createLineBorder(
+                    theme.getAccentSoft(), 1, true
+                ),
                 BorderFactory.createEmptyBorder(26, 30, 26, 30)
             )
         );
@@ -222,7 +239,9 @@ public class SnakeRecordView extends JPanel {
         backButton.setForeground(theme.getText());
         backButton.setBackground(theme.getButtonBackground());
         backButton.setBorder(
-            BorderFactory.createLineBorder(theme.getButtonBorder(), 1, true)
+            BorderFactory.createLineBorder(
+                theme.getButtonBorder(), 1, true
+            )
         );
 
         repaint();

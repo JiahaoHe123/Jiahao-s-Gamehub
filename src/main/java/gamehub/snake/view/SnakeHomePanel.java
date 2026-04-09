@@ -37,7 +37,9 @@ public class SnakeHomePanel extends JPanel {
      * @param styleSettings shared style/game settings
      * @param record score record provider
      */
-    public SnakeHomePanel(SnakeStyleSetting styleSettings, SnakeGameRecord record) {
+    public SnakeHomePanel(
+        SnakeStyleSetting styleSettings, SnakeGameRecord record
+    ) {
         super(new BorderLayout());
         this.styleSettings = styleSettings;
         this.record = record;
@@ -115,7 +117,9 @@ public class SnakeHomePanel extends JPanel {
         startButton.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseEntered(java.awt.event.MouseEvent e) {
-                startButton.setBackground(styleSettings.getTheme().getAccent().brighter());
+                startButton.setBackground(
+                    styleSettings.getTheme().getAccent().brighter()
+                );
             }
 
             @Override
@@ -240,13 +244,17 @@ public class SnakeHomePanel extends JPanel {
         customizeButton.setForeground(theme.getText());
         customizeButton.setBackground(theme.getButtonBackground());
         customizeButton.setBorder(
-            BorderFactory.createLineBorder(theme.getButtonBorder(), 1, true)
+            BorderFactory.createLineBorder(
+                theme.getButtonBorder(), 1, true
+            )
         );
 
         recordButton.setForeground(theme.getText());
         recordButton.setBackground(theme.getButtonBackground());
         recordButton.setBorder(
-            BorderFactory.createLineBorder(theme.getButtonBorder(), 1, true)
+            BorderFactory.createLineBorder(
+                theme.getButtonBorder(), 1, true
+            )
         );
 
         repaint();

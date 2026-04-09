@@ -75,7 +75,9 @@ public class SudokuHomePanel extends JPanel {
      * @param record persistent record provider for stats display
      * @param styleSetting shared style settings used for theming
      */
-    public SudokuHomePanel(SudokuGameRecord record, SudokuStyleSetting styleSetting) {
+    public SudokuHomePanel(
+        SudokuGameRecord record, SudokuStyleSetting styleSetting
+    ) {
         super(new BorderLayout());
         this.record = record;
         this.styleSetting = styleSetting;
@@ -174,7 +176,11 @@ public class SudokuHomePanel extends JPanel {
         card.setBackground(theme.getCardBackground());
         card.setBorder(
             BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(theme.getCardBorder(), 1, true),
+                BorderFactory.createLineBorder(
+                    theme.getCardBorder(),
+                    1,
+                    true
+                ),
                 BorderFactory.createEmptyBorder(25, 30, 25, 30)
             )
         );
@@ -273,7 +279,13 @@ public class SudokuHomePanel extends JPanel {
     private void styleActionButton(JButton button, SudokuTheme theme) {
         button.setForeground(theme.getTextPrimary());
         button.setBackground(theme.getButtonBackground());
-        button.setBorder(BorderFactory.createLineBorder(theme.getButtonBorder(), 1, true));
+        button.setBorder(
+            BorderFactory.createLineBorder(
+                theme.getButtonBorder(),
+                1,
+                true
+            )
+        );
         button.setOpaque(true);
     }
 }

@@ -108,7 +108,8 @@ public class HomePanel extends JPanel {
      * @param onThemeChanged consumer receiving the newly applied theme
      */
     public void setOnThemeChanged(Consumer<AppTheme> onThemeChanged) {
-        this.onThemeChanged = onThemeChanged == null ? theme -> {} : onThemeChanged;
+        this.onThemeChanged =
+            onThemeChanged == null ? theme -> {} : onThemeChanged;
     }
 
     /**
@@ -126,7 +127,8 @@ public class HomePanel extends JPanel {
         boolean dark = theme.isDark();
         Color pageBg = dark ? HomeTheme.DARK_PAGE_BG : HomeTheme.LIGHT_PAGE_BG;
         Color cardBg = dark ? HomeTheme.DARK_CARD_BG : HomeTheme.LIGHT_CARD_BG;
-        Color cardBorder = dark ? HomeTheme.DARK_CARD_BORDER : HomeTheme.LIGHT_CARD_BORDER;
+        Color cardBorder =
+            dark ? HomeTheme.DARK_CARD_BORDER : HomeTheme.LIGHT_CARD_BORDER;
         Color textColor = dark ? HomeTheme.DARK_TEXT : HomeTheme.LIGHT_TEXT;
 
         setBackground(pageBg);
@@ -161,7 +163,9 @@ public class HomePanel extends JPanel {
         card.setBackground(HomeTheme.LIGHT_CARD_BG);
         card.setBorder(
             BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(HomeTheme.LIGHT_CARD_BORDER, 1, true),
+                BorderFactory.createLineBorder(
+                    HomeTheme.LIGHT_CARD_BORDER, 1, true
+                ),
                 BorderFactory.createEmptyBorder(25, 30, 25, 30)
             )
         );
@@ -217,8 +221,16 @@ public class HomePanel extends JPanel {
         Color borderColor
     ) {
         button.setForeground(textColor);
-        button.setBackground(dark ? HomeTheme.DARK_BUTTON_BG : HomeTheme.LIGHT_BUTTON_BG);
-        button.setBorder(BorderFactory.createLineBorder(borderColor, 1, true));
+        button.setBackground(
+            dark ? HomeTheme.DARK_BUTTON_BG : HomeTheme.LIGHT_BUTTON_BG
+        );
+        button.setBorder(
+            BorderFactory.createLineBorder(
+                borderColor,
+                1,
+                true
+            )
+        );
         button.setOpaque(true);
     }
 }

@@ -190,7 +190,9 @@ public class SudokuGamePanel extends JPanel {
      */
     private JLabel createAttemptsLabel() {
         JLabel label = new JLabel();
-        label.setFont(new java.awt.Font("SansSerif", java.awt.Font.BOLD, 14));
+        label.setFont(
+            new java.awt.Font("SansSerif", java.awt.Font.BOLD, 14)
+        );
         label.setForeground(styleSetting.getTheme().getAttemptsColor());
         label.setBorder(
             BorderFactory.createEmptyBorder(0, 0, 0, 12)
@@ -220,7 +222,11 @@ public class SudokuGamePanel extends JPanel {
         card.setBackground(styleSetting.getTheme().getCardBackground());
         card.setBorder(
             BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(styleSetting.getTheme().getCardBorder(), 1, true),
+                BorderFactory.createLineBorder(
+                    styleSetting.getTheme().getCardBorder(),
+                    1,
+                    true
+                ),
                 BorderFactory.createEmptyBorder(10, 10, 10, 10)
             )
         );
@@ -258,11 +264,14 @@ public class SudokuGamePanel extends JPanel {
      */
     private void bindControllerCallbacks() {
         controller.setOnWin(() -> SwingUtilities.invokeLater(this::handleWin));
-        controller.setOnLose(() -> SwingUtilities.invokeLater(this::handleLose));
+        controller.setOnLose(
+            () -> SwingUtilities.invokeLater(this::handleLose)
+        );
     }
 
     /**
-     * Replaces the board area with the current board panel wrapped to square ratio.
+     * Replaces the board area with the
+     * current board panel wrapped to square ratio.
      */
     private void replaceBoardComponent() {
         boardCard.removeAll();

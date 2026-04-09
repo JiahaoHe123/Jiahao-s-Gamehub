@@ -55,7 +55,7 @@ public class NumberBar extends JPanel {
     * </p>
      *
      * @param remaining an array of length 9 where remaining[i] indicates
-     *                  how many times digit (i + 1) can still be placed
+     *      how many times digit (i + 1) can still be placed
     * @throws ArrayIndexOutOfBoundsException if {@code remaining.length < 9}
      */
     public void setRemaining(int[] remaining) {
@@ -67,7 +67,7 @@ public class NumberBar extends JPanel {
 
             // Visual cue: green when complete, gray otherwise
             labels[i].setForeground(
-                    remaining[i] == 0 ? new Color(0, 150, 0) : Color.GRAY);
+                remaining[i] == 0 ? new Color(0, 150, 0) : Color.GRAY);
         }
 
         // Ensure UI updates immediately

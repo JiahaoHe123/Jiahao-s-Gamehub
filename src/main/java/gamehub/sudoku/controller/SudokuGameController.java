@@ -80,7 +80,8 @@ public class SudokuGameController {
     /**
      * Validates the entire board as a final answer submission.
      *
-     * @return {@code true} when board is complete and valid; otherwise {@code false}
+     * @return {@code true} when board is complete and valid;
+     *      otherwise {@code false}
      */
     public boolean checkWholeBoard() {
         int[] answer = boardPanel.getCurrentSolution();
@@ -124,7 +125,8 @@ public class SudokuGameController {
 
     /** Sets callback for count updates; null maps to no-op. */
     public void setOnCountsChanged(Runnable onCountsChanged) {
-        this.onCountsChanged = onCountsChanged == null ? () -> {} : onCountsChanged;
+        this.onCountsChanged =
+            onCountsChanged == null ? () -> {} : onCountsChanged;
     }
 
     /** Sets callback for win event; null maps to no-op. */

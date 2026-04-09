@@ -102,7 +102,9 @@ public class SudokuModulePanel extends JPanel {
         if (theme == null) {
             return;
         }
-        styleSetting.setTheme(theme.isDark() ? SudokuTheme.DARK : SudokuTheme.LIGHT);
+        styleSetting.setTheme(
+            theme.isDark() ? SudokuTheme.DARK : SudokuTheme.LIGHT
+        );
 
         refreshThemeViews();
     }

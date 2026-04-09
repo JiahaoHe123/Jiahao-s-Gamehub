@@ -23,7 +23,9 @@ public enum SnakeBoardSize {
     /**
      * Creates a board-size preset.
      */
-    SnakeBoardSize(String storageKey, String displayName, int width, int height) {
+    SnakeBoardSize(
+        String storageKey, String displayName, int width, int height
+    ) {
         this.storageKey = storageKey;
         this.displayName = displayName;
         this.width = width;

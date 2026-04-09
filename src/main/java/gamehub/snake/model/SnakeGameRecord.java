@@ -104,7 +104,9 @@ public class SnakeGameRecord extends GameRecord {
                 return;
             }
 
-            List<String> lines = Files.readAllLines(filePath, StandardCharsets.UTF_8);
+            List<String> lines = Files.readAllLines(
+                filePath, StandardCharsets.UTF_8
+            );
             for (String line : lines) {
                 String t = line.trim();
                 if (t.isEmpty() || t.startsWith("#"))
@@ -127,7 +129,10 @@ public class SnakeGameRecord extends GameRecord {
 
                     String migratedKey = toCanonicalKey(key);
                     if (migratedKey != null) {
-                        record.put(migratedKey, Math.max(record.get(migratedKey), num));
+                        record.put(
+                            migratedKey,
+                            Math.max(record.get(migratedKey), num)
+                        );
                     }
                 } catch (NumberFormatException ignored) {}
             }
@@ -199,7 +204,9 @@ public class SnakeGameRecord extends GameRecord {
     /**
      * Builds legacy key format used by older versions.
      */
-    private static String legacyKeyGenerate(SnakeDifficulty d, SnakeBoardSize sb) {
+    private static String legacyKeyGenerate(
+        SnakeDifficulty d, SnakeBoardSize sb
+    ) {
         return "(" + d.displayName() + ", " + sb.displayName() + ")";
     }
 }
