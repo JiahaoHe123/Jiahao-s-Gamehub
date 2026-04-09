@@ -16,7 +16,7 @@ import java.util.Map;
 import gamehub.model.GameRecord;
 
 /**
- * GameRecord is a lightweight persistent record system for the Sudoku game.
+ * `SudokuGameRecord` is a lightweight persistent record system for Sudoku.
  *
  * <p>
  * It tracks the user's game outcomes (wins and losses) for each difficulty
@@ -34,7 +34,7 @@ import gamehub.model.GameRecord;
  * </p>
  *
  * <pre>
- * ~/Library/Application Support/Game-hub/history.txt
+ * ~/Library/Application Support/Game-hub/Sudoku-history.txt
  * </pre>
  *
  * <p>
@@ -58,15 +58,19 @@ import gamehub.model.GameRecord;
  *
  * <pre>
  * SudokuGameRecord record = new SudokuGameRecord();
- * record.recordWin(Difficulty.EASY);
- * int wins = record.getWins(Difficulty.EASY);
+ * record.recordWin(SudokuDifficulty.EASY);
+ * int wins = record.getWins(SudokuDifficulty.EASY);
  * </pre>
  */
 public class SudokuGameRecord extends GameRecord {
 
+    /** File name for the current Sudoku history record. */
     private static final String FILE_NAME = "Sudoku-history.txt";
+    /** Legacy file name used by older app versions. */
     private static final String LEGACY_FILE_NAME = "history.txt";
+    /** Legacy application folder name used by older app versions. */
     private static final String LEGACY_APP_NAME = "Sudoku";
+    /** Current application folder name for shared game data. */
     private static final String APP_NAME = "Game-hub";
 
     /**
@@ -83,6 +87,12 @@ public class SudokuGameRecord extends GameRecord {
         this(resolveDefaultHistoryFile());
     }
 
+    /**
+     * Resolves the default record file path and performs best-effort migration
+     * from legacy Sudoku locations.
+     *
+     * @return path to the record file used by this app version
+     */
     private static Path resolveDefaultHistoryFile() {
         Path target = getDefaultHistoryFile(FILE_NAME);
         try {
@@ -187,7 +197,7 @@ public class SudokuGameRecord extends GameRecord {
     }
 
     /**
-     * Convenience wrapper: record a win by integer level (0/1/2).
+     * Convenience wrapper: record a win by integer level (0/1/2/3).
      *
      * @param level difficulty index
      */
@@ -207,7 +217,7 @@ public class SudokuGameRecord extends GameRecord {
     }
 
     /**
-     * Convenience wrapper: record a loss by integer level (0/1/2).
+     * Convenience wrapper: record a loss by integer level (0/1/2/3).
      *
      * @param level difficulty index
      */
@@ -230,6 +240,9 @@ public class SudokuGameRecord extends GameRecord {
         save();
     }
 
+    /**
+     * Initializes in-memory counters to zero for every difficulty.
+     */
     private void initializeDefaults() {
         for (SudokuDifficulty d : SudokuDifficulty.values()) {
             wins.put(winKey(d), 0);

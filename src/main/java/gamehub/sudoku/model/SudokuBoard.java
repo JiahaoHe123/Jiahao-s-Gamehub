@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Random;
 
 /**
- * Matrix represents a Sudoku board generator + puzzle creator.
+ * `SudokuBoard` represents a Sudoku puzzle generator and playable board state.
  *
  * <p>
  * Responsibilities:
@@ -31,6 +31,7 @@ import java.util.Random;
  * <li>Easy -> 30 empties</li>
  * <li>Medium -> 40 empties</li>
  * <li>Hard -> 50 empties</li>
+ * <li>Nightmare -> 60 empties</li>
  * </ul>
  *
  * <p>
@@ -38,8 +39,7 @@ import java.util.Random;
  * </p>
  * <ul>
  * <li>This class uses a randomized backtracking solver, so each new
- * Matrix(difficulty) will
- * generate a different board.</li>
+ * {@code SudokuBoard(difficulty)} usually generates a different board.</li>
  * <li>Uniqueness is enforced by counting solutions after each removal attempt,
  * but the
  * removal loop is bounded (attempts &lt; 200), so in rare cases you may end up
@@ -65,7 +65,8 @@ public class SudokuBoard implements Iterable<Integer> {
     //     MAP.put(Difficulty.HARD, 50);
     // }
 
-    private int[][] data; // Current puzzle grid (0 indicates empty).
+    /** Current puzzle grid; {@code 0} indicates an empty cell. */
+    private int[][] data;
     /** The complete solved board, stored as a row-major list of 81 ints. */
     private List<Integer> solution;
     /** Cached number of empty cells for this puzzle (based on difficulty). */
@@ -105,14 +106,14 @@ public class SudokuBoard implements Iterable<Integer> {
     /**
      * Compatibility constructor to map integer levels to Difficulty.
      *
-     * @param level difficulty level (0=easy, 1=medium, 2=hard)
+        * @param level difficulty level (0=easy, 1=medium, 2=hard, 3=nightmare)
      */
     public SudokuBoard(int level) {
         this(SudokuDifficulty.fromLevel(level));
     }
 
     /**
-     * Construct a Matrix from a row-major list of 81 values. (Used for test)
+     * Construct a board from a row-major list of 81 values (test utility).
      *
      * <p>
      * This is mainly used to rebuild a grid from an existing solution list
@@ -219,8 +220,8 @@ public class SudokuBoard implements Iterable<Integer> {
      * </p>
      *
      * @param difficulty game difficulty
-     * @throws IllegalArgumentException if difficulty is not supported
-     * @return total empty cells in a given matrix
+    * @throws IllegalArgumentException if {@code difficulty} is {@code null}
+    * @return number of cells removed from the solved board
      */
     public int removeEntries(SudokuDifficulty difficulty) {
         if (difficulty == null) {

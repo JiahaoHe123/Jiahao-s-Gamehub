@@ -22,6 +22,11 @@ package gamehub.sudoku.model;
  * <p>
  * All methods are side-effect free and do not modify the grid.
  * </p>
+ *
+ * <p>
+ * Callers are expected to provide valid row/column coordinates before invoking
+ * duplicate checks.
+ * </p>
  */
 public final class SudokuRules {
 
@@ -133,6 +138,7 @@ public final class SudokuRules {
      * @param val     the value to place
      * @param boxSize the sub-grid size (typically 3)
      * @return {@code true} if the placement is invalid, {@code false} otherwise
+    * @implNote This method does not perform bounds checking on row/column.
      */
     public static boolean checkDuplicate(
         int[][] grid,
