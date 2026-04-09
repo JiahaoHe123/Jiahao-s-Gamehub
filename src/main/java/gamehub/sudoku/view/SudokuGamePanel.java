@@ -9,6 +9,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
+import javax.swing.Timer;
 
 import gamehub.sudoku.controller.SudokuGameController;
 import gamehub.sudoku.model.SudokuDifficulty;
@@ -61,6 +62,15 @@ public class SudokuGamePanel extends JPanel {
     /** Remaining-attempts label. */
     private final JLabel attemptsLabel;
 
+    /** Live elapsed time label. */
+    private final JLabel timerLabel;
+
+    /** Swing timer used to update elapsed time. */
+    private Timer gameTimer;
+
+    /** Elapsed seconds for the current round. */
+    private int elapsedSeconds;
+
     /** The currently selected difficulty for the ongoing game. */
     private SudokuDifficulty currentDifficulty = SudokuDifficulty.EASY;
 
@@ -85,6 +95,7 @@ public class SudokuGamePanel extends JPanel {
 
         numberBar = new NumberBar();
         attemptsLabel = createAttemptsLabel();
+        timerLabel = createTimerLabel();
         centerWrap = createCenterWrap();
         boardCard = createBoardCard();
         controlPanel = new ControlPanel(styleSetting);
@@ -134,6 +145,7 @@ public class SudokuGamePanel extends JPanel {
         revalidate();
         repaint();
 
+        startTimer();
         SwingUtilities.invokeLater(() -> boardPanel.requestFocusInWindow());
     }
 
@@ -159,6 +171,7 @@ public class SudokuGamePanel extends JPanel {
         );
 
         attemptsLabel.setForeground(theme.getAttemptsColor());
+        timerLabel.setForeground(theme.getTextSecondary());
 
         controlPanel.refreshTheme();
         if (boardPanel != null) {
@@ -177,8 +190,13 @@ public class SudokuGamePanel extends JPanel {
         JPanel topBar = new JPanel(new BorderLayout());
         topBar.setOpaque(false);
 
+        JPanel rightStatusPanel = new JPanel(new java.awt.GridLayout(2, 1));
+        rightStatusPanel.setOpaque(false);
+        rightStatusPanel.add(timerLabel);
+        rightStatusPanel.add(attemptsLabel);
+
         topBar.add(numberBar, BorderLayout.CENTER);
-        topBar.add(attemptsLabel, BorderLayout.EAST);
+        topBar.add(rightStatusPanel, BorderLayout.EAST);
 
         return topBar;
     }
@@ -198,6 +216,21 @@ public class SudokuGamePanel extends JPanel {
             BorderFactory.createEmptyBorder(0, 0, 0, 12)
         );
         label.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        return label;
+    }
+
+    /**
+     * Creates the timer label shown above remaining mistakes.
+     *
+     * @return configured timer label
+     */
+    private JLabel createTimerLabel() {
+        JLabel label = new JLabel();
+        label.setFont(new java.awt.Font("SansSerif", java.awt.Font.PLAIN, 13));
+        label.setForeground(styleSetting.getTheme().getTextSecondary());
+        label.setBorder(BorderFactory.createEmptyBorder(0, 0, 2, 12));
+        label.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        label.setText("Time: 00:00");
         return label;
     }
 
@@ -290,11 +323,49 @@ public class SudokuGamePanel extends JPanel {
         numberBar.setRemaining(controller.getRemainingCounts());
     }
 
+    /** Starts or restarts the in-game timer at 00:00. */
+    private void startTimer() {
+        stopTimer();
+        elapsedSeconds = 0;
+        refreshTimerLabel();
+
+        gameTimer = new Timer(1000, event -> {
+            elapsedSeconds++;
+            refreshTimerLabel();
+        });
+        gameTimer.start();
+    }
+
+    /** Stops the in-game timer if running. */
+    private void stopTimer() {
+        if (gameTimer != null) {
+            gameTimer.stop();
+        }
+    }
+
+    /** Refreshes the timer label with current elapsed mm:ss text. */
+    private void refreshTimerLabel() {
+        timerLabel.setText("Time: " + formatElapsedSeconds(elapsedSeconds));
+    }
+
+    /**
+     * Formats elapsed seconds as mm:ss.
+     *
+     * @param totalSeconds elapsed seconds
+     * @return formatted time text
+     */
+    private String formatElapsedSeconds(int totalSeconds) {
+        int minutes = totalSeconds / 60;
+        int seconds = totalSeconds % 60;
+        return String.format("%02d:%02d", minutes, seconds);
+    }
+
     /**
      * Handles win flow: persist result and prompt for next action.
      */
     private void handleWin() {
-        record.recordWin(currentDifficulty);
+        stopTimer();
+        record.recordWinWithTime(currentDifficulty, elapsedSeconds);
 
         int choice = JOptionPane.showConfirmDialog(
             this,
@@ -326,6 +397,7 @@ public class SudokuGamePanel extends JPanel {
      * Handles lose flow: persist result, show message, and return home.
      */
     private void handleLose() {
+        stopTimer();
         record.recordLoss(currentDifficulty);
         JOptionPane.showMessageDialog(
             this,

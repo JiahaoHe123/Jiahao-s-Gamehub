@@ -202,6 +202,7 @@ public class SudokuHomePanel extends JPanel {
         StringBuilder statsHtml = new StringBuilder();
         // String words = "";
         for (SudokuDifficulty d : SudokuDifficulty.values()) {
+            int bestSeconds = record.getBestTimeSeconds(d);
             statsHtml
                 .append(d.displayName())
                 .append(": ")
@@ -210,7 +211,10 @@ public class SudokuHomePanel extends JPanel {
                 .append(record.getLosses(d))
                 .append(" Losses (")
                 .append(String.format("%.1f", record.getWinRate(d)))
-                .append("%)<br>");
+                .append("%)")
+                .append(" • Best: ")
+                .append(bestSeconds == 0 ? "--:--" : formatSeconds(bestSeconds))
+                .append("<br>");
         }
 
         statsLabel.setText(
@@ -219,6 +223,18 @@ public class SudokuHomePanel extends JPanel {
                 + statsHtml.toString()
                 + "</div></html>"
         );
+    }
+
+    /**
+     * Formats seconds into mm:ss display text.
+     *
+     * @param totalSeconds total duration in seconds
+     * @return formatted duration
+     */
+    private String formatSeconds(int totalSeconds) {
+        int minutes = totalSeconds / 60;
+        int seconds = totalSeconds % 60;
+        return String.format("%02d:%02d", minutes, seconds);
     }
 
     /**

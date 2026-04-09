@@ -25,6 +25,7 @@ public class SudokuGameRecordTest {
         for (SudokuDifficulty difficulty : SudokuDifficulty.values()) {
             assertEquals(0, record.getWins(difficulty));
             assertEquals(0, record.getLosses(difficulty));
+            assertEquals(0, record.getBestTimeSeconds(difficulty));
         }
         assertTrue(Files.exists(file));
     }
@@ -46,6 +47,7 @@ public class SudokuGameRecordTest {
         assertEquals(1, second.getLosses(SudokuDifficulty.EASY));
         assertEquals(1, second.getWins(SudokuDifficulty.HARD));
         assertEquals(0, second.getLosses(SudokuDifficulty.HARD));
+        assertEquals(0, second.getBestTimeSeconds(SudokuDifficulty.EASY));
     }
 
     @Test
@@ -125,11 +127,12 @@ public class SudokuGameRecordTest {
         record.recordWin(SudokuDifficulty.EASY);
         record.recordLoss(SudokuDifficulty.EASY);
         record.recordWin(SudokuDifficulty.HARD);
+        record.recordWinWithTime(SudokuDifficulty.EASY, 128);
 
         Map<SudokuDifficulty, int[]> snapshot = record.snapshotWL();
 
         assertArrayEquals(
-            new int[] {1, 1}, snapshot.get(SudokuDifficulty.EASY)
+            new int[] {2, 1}, snapshot.get(SudokuDifficulty.EASY)
         );
         assertArrayEquals(
             new int[] {1, 0}, snapshot.get(SudokuDifficulty.HARD)
@@ -139,12 +142,32 @@ public class SudokuGameRecordTest {
         for (SudokuDifficulty difficulty : SudokuDifficulty.values()) {
             assertEquals(0, record.getWins(difficulty));
             assertEquals(0, record.getLosses(difficulty));
+            assertEquals(0, record.getBestTimeSeconds(difficulty));
         }
 
         SudokuGameRecord reloaded = new SudokuGameRecord(file);
         for (SudokuDifficulty difficulty : SudokuDifficulty.values()) {
             assertEquals(0, reloaded.getWins(difficulty));
             assertEquals(0, reloaded.getLosses(difficulty));
+            assertEquals(0, reloaded.getBestTimeSeconds(difficulty));
         }
+    }
+
+    @Test
+    public void recordWinWithTimeTracksShortestTimeAndPersists() throws IOException {
+        Path dir = Files.createTempDirectory("sudoku-record-test");
+        Path file = dir.resolve("Sudoku-history.txt");
+
+        SudokuGameRecord record = new SudokuGameRecord(file);
+        record.recordWinWithTime(SudokuDifficulty.MEDIUM, 180);
+        record.recordWinWithTime(SudokuDifficulty.MEDIUM, 220);
+        record.recordWinWithTime(SudokuDifficulty.MEDIUM, 95);
+
+        assertEquals(3, record.getWins(SudokuDifficulty.MEDIUM));
+        assertEquals(95, record.getBestTimeSeconds(SudokuDifficulty.MEDIUM));
+
+        SudokuGameRecord reloaded = new SudokuGameRecord(file);
+        assertEquals(3, reloaded.getWins(SudokuDifficulty.MEDIUM));
+        assertEquals(95, reloaded.getBestTimeSeconds(SudokuDifficulty.MEDIUM));
     }
 }

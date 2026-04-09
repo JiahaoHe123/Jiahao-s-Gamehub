@@ -151,6 +151,16 @@ public class SudokuGameRecord extends GameRecord {
     }
 
     /**
+     * Returns the best (shortest) recorded win time for a difficulty.
+     *
+     * @param d the given difficulty
+     * @return best time in seconds; {@code 0} means no completed record yet
+     */
+    public int getBestTimeSeconds(SudokuDifficulty d) {
+        return wins.getOrDefault(bestTimeKey(d), 0);
+    }
+
+    /**
      * Win rate in percentage (0.0 ~ 100.0) of a given difficulty.
      *
      * <p>
@@ -197,6 +207,27 @@ public class SudokuGameRecord extends GameRecord {
     }
 
     /**
+     * Records a win and updates best time when the new time is better.
+     *
+     * @param d difficulty
+     * @param elapsedSeconds completion time in seconds
+     */
+    public void recordWinWithTime(SudokuDifficulty d, int elapsedSeconds) {
+        String k = winKey(d);
+        wins.put(k, wins.getOrDefault(k, 0) + 1);
+
+        if (elapsedSeconds > 0) {
+            String bestKey = bestTimeKey(d);
+            int previousBest = wins.getOrDefault(bestKey, 0);
+            if (previousBest == 0 || elapsedSeconds < previousBest) {
+                wins.put(bestKey, elapsedSeconds);
+            }
+        }
+
+        save();
+    }
+
+    /**
      * Convenience wrapper: record a win by integer level (0/1/2/3).
      *
      * @param level difficulty index
@@ -236,6 +267,7 @@ public class SudokuGameRecord extends GameRecord {
         for (SudokuDifficulty d : SudokuDifficulty.values()) {
             wins.put(winKey(d), 0);
             wins.put(lossKey(d), 0);
+            wins.put(bestTimeKey(d), 0);
         }
         save();
     }
@@ -247,6 +279,7 @@ public class SudokuGameRecord extends GameRecord {
         for (SudokuDifficulty d : SudokuDifficulty.values()) {
             wins.put(winKey(d), 0);
             wins.put(lossKey(d), 0);
+            wins.put(bestTimeKey(d), 0);
         }
     }
 
@@ -335,6 +368,7 @@ public class SudokuGameRecord extends GameRecord {
             for (SudokuDifficulty d : SudokuDifficulty.values()) {
                 out.add(winKey(d) + "=" + getWins(d));
                 out.add(lossKey(d) + "=" + getLosses(d));
+                out.add(bestTimeKey(d) + "=" + getBestTimeSeconds(d));
             }
 
             Path tmp = filePath.resolveSibling(filePath.getFileName() + ".tmp");
@@ -359,23 +393,6 @@ public class SudokuGameRecord extends GameRecord {
         }
     }
 
-    // /**
-    //  * Ensure the directory that contains the history file exists.
-    //  *
-    //  * <p>
-    //  * Files.createDirectories is safe to call repeatedly; if the directory
-    //  * already exists, it does nothing.
-    //  * </p>
-    //  *
-    //  * @throws IOException if the directories cannot be created
-    //  */
-    // private void ensureParentDir() throws IOException {
-    //     Path parent = filePath.getParent();
-    //     if (parent != null) {
-    //         Files.createDirectories(parent);
-    //     }
-    // }
-
     /**
      * Build the key used to store wins in the txt file.
      *
@@ -394,6 +411,16 @@ public class SudokuGameRecord extends GameRecord {
      */
     private static String lossKey(SudokuDifficulty d) {
         return "loss." + d.storageKey();
+    }
+
+    /**
+     * Build the key used to store best completion time in seconds.
+     *
+     * @param d difficulty
+     * @return a key like "best_time.easy"
+     */
+    private static String bestTimeKey(SudokuDifficulty d) {
+        return "best_time." + d.storageKey();
     }
 
 }
