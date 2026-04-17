@@ -4,11 +4,38 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.List;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class SudokuBoardTest {
+    private static SudokuBoard easyBoard;
+    private static SudokuBoard solvedBoard;
+
+    @BeforeClass
+    public static void setUpBoards() {
+        easyBoard = new SudokuBoard(SudokuDifficulty.EASY);
+
+        // Rebuild the solved fixture from the first board's solution list.
+        solvedBoard = buildSolvedBoard(easyBoard.getSolution());
+    }
+
+    private static SudokuBoard buildSolvedBoard(List<Integer> solution) {
+        try {
+            Constructor<SudokuBoard> constructor =
+                SudokuBoard.class.getDeclaredConstructor(List.class);
+            constructor.setAccessible(true);
+            return constructor.newInstance(solution);
+        } catch (ReflectiveOperationException exception) {
+            throw new AssertionError(
+                "Unable to construct solved SudokuBoard fixture",
+                exception
+            );
+        }
+    }
+
     @Test(expected = IllegalArgumentException.class)
     public void constructorThrowsWhenDifficultyIsNull() {
         new SudokuBoard((SudokuDifficulty) null);
@@ -16,10 +43,8 @@ public class SudokuBoardTest {
 
     @Test
     public void iteratorReturnsExactly81Cells() {
-        SudokuBoard board = new SudokuBoard(SudokuDifficulty.EASY);
-
         int count = 0;
-        for (int _ : board) {
+        for (int _ : easyBoard) {
             count++;
         }
 
@@ -28,25 +53,22 @@ public class SudokuBoardTest {
 
     @Test
     public void emptyCellCountMatchesIteratorZeros() {
-        SudokuBoard board = new SudokuBoard(SudokuDifficulty.MEDIUM);
-
         int zeros = 0;
-        for (int value : board) {
+        for (int value : easyBoard) {
             if (value == 0) {
                 zeros++;
             }
         }
 
-        assertEquals(board.numOfEmptyCells(), zeros);
+        assertEquals(easyBoard.numOfEmptyCells(), zeros);
         assertTrue(
-            board.numOfEmptyCells() <= SudokuDifficulty.MEDIUM.emptyCells()
+            easyBoard.numOfEmptyCells() <= SudokuDifficulty.EASY.emptyCells()
         );
     }
 
     @Test
     public void solutionContains81NumbersInRangeOneToNine() {
-        SudokuBoard board = new SudokuBoard(SudokuDifficulty.HARD);
-        List<Integer> solution = board.getSolution();
+        List<Integer> solution = easyBoard.getSolution();
 
         assertEquals(81, solution.size());
         for (int value : solution) {
@@ -56,30 +78,24 @@ public class SudokuBoardTest {
 
     @Test
     public void fillMatrixProducesSolvedBoardWithoutZeros() {
-        SudokuBoard board = new SudokuBoard(SudokuDifficulty.EASY);
-        board.fillMatrix();
-
-        for (int value : board) {
+        for (int value : solvedBoard) {
             assertTrue(value >= 1 && value <= 9);
         }
 
-        assertEquals(1, board.ensureUniqueSolution());
+        assertEquals(1, solvedBoard.ensureUniqueSolution());
     }
 
     @Test
     public void checkDuplicateDetectsRowConflictOnSolvedBoard() {
-        SudokuBoard board = new SudokuBoard(SudokuDifficulty.EASY);
-        board.fillMatrix();
-
         List<Integer> values = new ArrayList<>();
-        for (int value : board) {
+        for (int value : solvedBoard) {
             values.add(value);
         }
 
         int existingRowValue = values.get(0); // row 0, col 0
 
-        assertTrue(board.checkDuplicate(0, 1, existingRowValue));
-        assertFalse(board.checkDuplicate(0, 1, values.get(1)));
+        assertTrue(solvedBoard.checkDuplicate(0, 1, existingRowValue));
+        assertFalse(solvedBoard.checkDuplicate(0, 1, values.get(1)));
     }
 
 }
